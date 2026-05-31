@@ -12,19 +12,19 @@
 --border:#e2e8f0; --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.05);
 --shadow-lg:0 4px 12px rgba(15,23,42,.08),0 16px 40px rgba(15,23,42,.08); }
 *{box-sizing:border-box}
-body{margin:0;background:
+body{margin:0;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;background:
  radial-gradient(1200px 500px at 100% -10%,#dbeafe55,transparent),
  radial-gradient(900px 400px at -10% 0,#dcfce755,transparent),var(--bg);
  color:var(--ink);font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{max-width:980px;margin:0 auto;padding:0 16px 70px}
-header{background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0ea5e9);border-radius:0 0 24px 24px;
- padding:34px 26px 30px;color:#fff;box-shadow:var(--shadow-lg);margin-bottom:22px;position:relative;overflow:hidden}
-header::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;
- background:radial-gradient(circle,#ffffff22,transparent 70%)}
-header h1,header p,header .badges{position:relative;z-index:2;max-width:62%}
-.hero{position:absolute;right:0;top:0;height:100%;width:42%;object-fit:cover;z-index:0;
- -webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%);opacity:.85}
-@media(max-width:640px){.hero{opacity:.25;width:60%}header h1,header p,header .badges{max-width:100%}}
+.wrap{width:min(900px,100%);margin:0 auto;padding:0 0 70px}
+@media(max-width:932px){.wrap{padding-left:16px;padding-right:16px}}
+header{position:relative;overflow:hidden;border-radius:0 0 24px 24px;color:#fff;box-shadow:var(--shadow-lg);
+ margin-bottom:24px;padding:40px clamp(24px,4vw,44px) 34px;
+ background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0ea5e9)}
+header h1,header p,header .badges{position:relative;z-index:2}
+.hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.4}
+header::after{content:"";position:absolute;inset:0;z-index:1;
+ background:linear-gradient(135deg,rgba(30,58,138,.82),rgba(37,99,235,.62) 55%,rgba(14,165,233,.55))}
 header h1{font-size:30px;margin:0 0 6px;font-weight:800;letter-spacing:-.5px}
 header p{margin:0;color:#dbeafe;font-size:14px;font-weight:500}
 .badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
@@ -85,6 +85,39 @@ li{margin:4px 0;font-size:14px}
 .pillrow{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
 .pill{font-size:13px;padding:10px 14px;border-radius:12px;background:var(--rest);flex:1;min-width:200px;font-weight:500;border:1px solid var(--border)}
 button{transition:.16s}button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-top:16px}
+.gcard{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#0f172a;cursor:pointer;transition:.2s}
+.gcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.gcard img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:.4s}
+.gcard:hover img{transform:scale(1.05)}
+.gcard .tag{position:absolute;top:10px;left:10px;background:#ffffffe6;color:#1e3a8a;font-weight:800;font-size:12px;padding:4px 10px;border-radius:999px;backdrop-filter:blur(4px)}
+.gcard .rm{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:#0f172abb;color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;opacity:0;transition:.2s}
+.gcard:hover .rm{opacity:1}
+.gempty{text-align:center;padding:36px 16px;color:var(--muted);border:2px dashed var(--border);border-radius:16px;margin-top:14px}
+.gempty .big{font-size:34px;margin-bottom:6px}
+.filebtn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;cursor:pointer;
+ font-weight:700;font-size:14px;color:#fff;background:linear-gradient(135deg,#2563eb,#0ea5e9);
+ border:none;box-shadow:0 4px 12px rgba(37,99,235,.3);transition:.16s}
+.filebtn:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.filebtn input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
+.filename{margin-left:10px;font-size:13px;color:var(--muted)}
+input[type=month]{padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px}
+.donebtn{margin-top:14px;padding:13px 22px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;
+ color:#fff;background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 6px 16px rgba(34,197,94,.4)}
+.donebtn:disabled{background:#cbd5e1;box-shadow:none;cursor:default}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:6px}
+.badge{text-align:center;padding:14px 8px;border-radius:14px;border:1px solid var(--border);background:var(--rest);transition:.2s}
+.badge.earned{background:linear-gradient(135deg,#fff7ed,#fef3c7);border-color:#fcd34d}
+.badge .ico{font-size:30px;filter:grayscale(1);opacity:.4}
+.badge.earned .ico{filter:none;opacity:1}
+.badge .name{font-size:12px;font-weight:700;margin-top:5px}
+.badge .req{font-size:10px;color:var(--muted)}
+.confetti{position:fixed;top:-10px;width:10px;height:14px;z-index:60;pointer-events:none;border-radius:2px}
+#lightbox{position:fixed;inset:0;background:rgba(15,23,42,.92);display:none;align-items:center;justify-content:center;z-index:50;padding:24px;cursor:zoom-out}
+#lightbox.on{display:flex}
+#lightbox img{max-width:92%;max-height:88%;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+#lightbox .cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#fff;font-weight:700}
+#lightbox .x{position:absolute;top:18px;right:22px;color:#fff;font-size:30px;cursor:pointer;line-height:1}
 input,select{font-family:inherit}input:focus,select:focus{outline:2px solid var(--blue2);outline-offset:-1px}
 </style>
 </head>
@@ -93,7 +126,6 @@ input,select{font-family:inherit}input:focus,select:focus{outline:2px solid var(
 <header>
 <h1>Egyéves edzésterv</h1>
 <p>Személyre szabott terv kezdő szintről · indulás 2026 szeptember</p>
-<div class="badges"><span>🏃 Futás</span><span>💪 TRX</span><span>🚣 Evezőgép</span><span>📅 12 havi blokk</span><span>📓 Napló</span></div>
 <img class="hero" loading="lazy" alt="" aria-hidden="true" src="https://images.pexels.com/photos/16980804/pexels-photo-16980804.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop">
 </header>
 
@@ -142,6 +174,11 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 </div>
 <div id="weekList"></div>
 <p class="muted" style="margin-top:8px">A pipák ebben a böngészőben tárolódnak, hetente automatikusan nullázódnak.</p>
+</div>
+<div class="card">
+<h2>🏅 Jelvények</h2>
+<p class="muted">Gyűjtsd be a mérföldköveket – minden elvégzett edzés számít!</p>
+<div id="badges" class="badges-grid"></div>
 </div>
 </div>
 
@@ -327,8 +364,6 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 </div>
 </div>
 
-</div>
-
 <!-- NAPLO -->
 <div class="panel" id="naplo">
 <div class="card">
@@ -355,6 +390,18 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 </div>
 <p class="muted" id="chEmpty" style="margin-top:8px"></p>
 </div>
+<div class="card">
+<h2>⚖️ Testsúly</h2>
+<p class="muted">Rögzítsd hetente a testsúlyodat, és kövesd a trendet.</p>
+<div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-top:8px">
+ <div><label class="muted">Dátum</label><br><input type="date" id="wDate" style="padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px"></div>
+ <div><label class="muted">Testsúly (kg)</label><br><input type="number" id="wKg" step="0.1" min="0" placeholder="pl. 78,5" style="width:120px;padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px"></div>
+ <button id="wAdd" style="padding:10px 18px;background:var(--blue);color:#fff;border:none;border-radius:10px;cursor:pointer;font-weight:700">Rögzítés</button>
+</div>
+<div id="wStats" class="tip" style="margin-top:12px;display:none"></div>
+<canvas id="chWeight" height="220" style="margin-top:12px"></canvas>
+<p class="muted" id="wEmpty" style="margin-top:8px"></p>
+</div>
 </div>
 
 <!-- FOTOK -->
@@ -364,10 +411,12 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <p class="muted">Tölts fel havonta egy fotót, hogy lásd a változást. A képek csak ebben a böngészőben tárolódnak (privát), kicsinyítve.</p>
 <div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-top:8px">
  <div><label class="muted">Hónap</label><br><input type="month" id="phMonth" style="padding:8px;border:1px solid var(--border);border-radius:8px"></div>
- <div><label class="muted">Fotó</label><br><input type="file" id="phFile" accept="image/*" style="font-size:13px"></div>
+ <div><label class="muted">Fotó</label><br>
+  <label class="filebtn">📷 Fájl kiválasztása<input type="file" id="phFile" accept="image/*"></label>
+  <span class="filename" id="phName">Nincs kiválasztva</span></div>
 </div>
 <p class="muted" id="phMsg" style="margin-top:8px"></p>
-<div id="phGallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px"></div>
+<div id="phGallery" class="gallery"></div>
 </div>
 <div class="card" id="compareCard" style="display:none">
 <h2>↔️ Előtte – utána</h2>
@@ -381,6 +430,9 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 </div>
 </div>
 </div>
+</div>
+
+<div id="lightbox"><span class="x">✕</span><img alt=""><div class="cap"></div></div>
 
 <script>
 const months = [
@@ -423,7 +475,7 @@ render(0);
 function activateTab(p){
  document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
  document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===p));
- if(p==='naplo'&&window.renderCharts)renderCharts();
+ if(p==='naplo'){if(window.renderCharts)renderCharts();if(window.renderWeight)renderWeight();}
  window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>activateTab(t.dataset.p);});
@@ -500,7 +552,56 @@ function monday(d){const o=new Date(d);o.setHours(0,0,0,0);o.setDate(o.getDate()
 const weekA=[['Futás','Kocogás-séta intervall, 25-30\''],['Pihenő',''],['TRX','Teljes test körforma, 35\''],['Pihenő',''],['Futás','Folyamatos kocogás, 30\''],['TRX','Körforma (kitörés, húzás), 35\''],['Pihenő','']];
 const weekB=[['Pihenő',''],['Evezés','Alap állóképességi evezés, 20-30\''],['Pihenő',''],['Evezés','Intervall/technikai evezés, 20-30\''],['Pihenő',''],['Evezés','Hosszabb folyamatos evezés, 25-35\''],['Pihenő','']];
 const dayNames=['Hétfő','Kedd','Szerda','Csüt.','Péntek','Szombat','Vasárnap'];
+function confetti(){
+ const colors=['#2563eb','#22c55e','#f59e0b','#ef4444','#a855f7','#0ea5e9'];
+ for(let i=0;i<90;i++){
+  const c=document.createElement('div');c.className='confetti';
+  c.style.left=Math.random()*100+'vw';c.style.background=colors[i%colors.length];
+  c.style.transform='rotate('+Math.random()*360+'deg)';
+  document.body.appendChild(c);
+  const dur=2000+Math.random()*1600;
+  c.animate([{top:'-10px',opacity:1},{top:'100vh',opacity:.85}],{duration:dur,easing:'cubic-bezier(.3,.7,.4,1)'});
+  setTimeout(()=>c.remove(),dur);
+ }
+}
+function renderBadges(){
+ const g=document.getElementById('badges');if(!g)return;
+ const a=load();const n=a.length;const st=streak(a);
+ const defs=[
+  {ico:'🌱',name:'Első edzés',req:'1 edzés',ok:n>=1},
+  {ico:'🔥',name:'Lendületben',req:'10 edzés',ok:n>=10},
+  {ico:'💪',name:'Kitartó',req:'25 edzés',ok:n>=25},
+  {ico:'🏆',name:'Félúton',req:'50 edzés',ok:n>=50},
+  {ico:'👑',name:'Centurió',req:'100 edzés',ok:n>=100},
+  {ico:'📅',name:'Sorozat',req:'4 hét zsinórban',ok:st>=4},
+ ];
+ g.innerHTML=defs.map(d=>`<div class="badge ${d.ok?'earned':''}"><div class="ico">${d.ico}</div><div class="name">${d.name}</div><div class="req">${d.req}</div></div>`).join('');
+}
+// ---- Testsúly ----
+const WKEY='edzes_suly_v1';let chW=null;
+const wDate=document.getElementById('wDate');wDate.value=new Date().toISOString().slice(0,10);
+function loadW(){try{return JSON.parse(localStorage.getItem(WKEY))||[]}catch(e){return[]}}
+function saveW(a){localStorage.setItem(WKEY,JSON.stringify(a))}
+function renderWeight(){
+ const a=loadW().sort((x,y)=>x.date.localeCompare(y.date));
+ const emp=document.getElementById('wEmpty'),stats=document.getElementById('wStats');
+ if(!a.length){emp.textContent='Még nincs testsúly-adat – rögzítsd az első mérést.';stats.style.display='none';if(chW){chW.destroy();chW=null;}return;}
+ emp.textContent='';
+ const first=a[0].kg,last=a[a.length-1].kg,diff=(last-first).toFixed(1);
+ stats.style.display='';stats.innerHTML=`<b>Jelenleg:</b> ${last} kg · <b>Kezdő:</b> ${first} kg · <b>Változás:</b> ${diff>0?'+':''}${diff} kg`;
+ if(chW)chW.destroy();
+ chW=new Chart(document.getElementById('chWeight'),{type:'line',
+  data:{labels:a.map(e=>e.date),datasets:[{data:a.map(e=>e.kg),borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.13)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#2563eb'}]},
+  options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>v+' kg'}}}}});
+}
+document.getElementById('wAdd').onclick=()=>{
+ const kg=parseFloat((document.getElementById('wKg').value||'').replace(',','.'));
+ if(!kg||!wDate.value)return;
+ const a=loadW().filter(e=>e.date!==wDate.value);a.push({date:wDate.value,kg});saveW(a);
+ document.getElementById('wKg').value='';renderWeight();
+};
 function setupToday(){
+ renderBadges();
  const now=new Date();now.setHours(0,0,0,0);
  const box=document.getElementById('todayBox');
  if(now<START){box.innerHTML='<b>A terv 2026. szeptember 1-jén indul.</b><br>Addig is böngészd át a havi tervet és a gyakorlatokat!';
@@ -510,9 +611,23 @@ function setupToday(){
  const di=(now.getDay()+6)%7;const t=sched[di];
  const wkType=isA?'„A” hét – terem (TRX + futás)':'„B” hét – otthon (evezőgép)';
  const emoji={'Futás':'🏃','TRX':'💪','Evezés':'🚣','Pihenő':'😴'}[t[0]]||'';
+ const todayStr=now.toISOString().slice(0,10);
  box.innerHTML=`<div style="font-size:13px;opacity:.85">${wkType} · ${dayNames[di]}</div>
   <div style="font-size:28px;font-weight:800;margin:6px 0">${emoji} ${t[0]}</div>
   <div style="opacity:.92">${t[1]||'Pihenj és regenerálódj a következő edzésre.'}</div>`;
+ if(t[0]!=='Pihenő'){
+  const typeLbl={'Futás':'🏃 Futás','TRX':'💪 TRX','Evezés':'🚣 Evezés'}[t[0]];
+  const already=load().some(e=>e.date===todayStr && e.type===typeLbl);
+  const btn=document.createElement('button');btn.className='donebtn';
+  btn.textContent=already?'✅ Mai edzés kész!':'✅ Ma elvégeztem';btn.disabled=already;
+  btn.onclick=()=>{
+   const a=load();a.push({id:Date.now(),date:todayStr,type:typeLbl,note:'Ma elvégeztem'});save(a);
+   const wkKey='wk_'+monday(now).toISOString().slice(0,10);let dn=[];try{dn=JSON.parse(localStorage.getItem(wkKey))||[]}catch(e){}
+   if(!dn.includes(di)){dn.push(di);localStorage.setItem(wkKey,JSON.stringify(dn));}
+   confetti();renderLog();setupToday();
+  };
+  box.appendChild(btn);
+ }
  // checklist
  const wkKey='wk_'+monday(now).toISOString().slice(0,10);
  let done=[];try{done=JSON.parse(localStorage.getItem(wkKey))||[]}catch(e){}
@@ -557,17 +672,19 @@ function resize(file,cb){
 function renderGallery(){
  const o=loadPhotos();const g=document.getElementById('phGallery');g.innerHTML='';
  const keys=Object.keys(o).sort();
- if(!keys.length){g.innerHTML='<p class="muted">Még nincs feltöltött fotó.</p>';return;}
+ if(!keys.length){g.innerHTML='<div class="gempty"><div class="big">📷</div>Még nincs feltöltött fotó.<br>Válassz egy hónapot fent, és tölts fel egy képet!</div>';updateCompare();return;}
  keys.forEach(k=>{
-  const d=document.createElement('div');
-  d.style.cssText='border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)';
-  d.innerHTML=`<img src="${o[k]}" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover">
-   <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;font-size:13px;font-weight:700">
-   <span>${k}</span><span data-k="${k}" class="phDel" style="cursor:pointer;color:#ef4444">✕</span></div>`;
+  const d=document.createElement('div');d.className='gcard';
+  d.innerHTML=`<img loading="lazy" src="${o[k]}"><span class="tag">${k}</span><button class="rm" data-k="${k}" title="Törlés">✕</button>`;
+  d.querySelector('img').onclick=()=>openLightbox(o[k],k);
   g.appendChild(d);
  });
- g.querySelectorAll('.phDel').forEach(b=>b.onclick=()=>{const o=loadPhotos();delete o[b.dataset.k];savePhotos(o);renderGallery();});
+ g.querySelectorAll('.rm').forEach(b=>b.onclick=e=>{e.stopPropagation();const o=loadPhotos();delete o[b.dataset.k];savePhotos(o);renderGallery();});
  updateCompare();
+}
+function openLightbox(src,cap){
+ const lb=document.getElementById('lightbox');
+ lb.querySelector('img').src=src;lb.querySelector('.cap').textContent=cap;lb.classList.add('on');
 }
 function showCompare(){
  const o=loadPhotos();
@@ -590,6 +707,7 @@ const cmpA=document.getElementById('cmpA'),cmpB=document.getElementById('cmpB');
 cmpA.onchange=showCompare;cmpB.onchange=showCompare;
 document.getElementById('phFile').onchange=e=>{
  const f=e.target.files[0];if(!f)return;
+ document.getElementById('phName').textContent=f.name;
  const msg=document.getElementById('phMsg');
  resize(f,data=>{
   const o=loadPhotos();const exists=o[phMonth.value];
@@ -600,6 +718,10 @@ document.getElementById('phFile').onchange=e=>{
  e.target.value='';
 };
 renderGallery();
+renderWeight();
+const _lb=document.getElementById('lightbox');
+_lb.onclick=e=>{if(e.target===_lb||e.target.classList.contains('x'))_lb.classList.remove('on');};
+document.addEventListener('keydown',e=>{if(e.key==='Escape')_lb.classList.remove('on');});
 </script>
 </body>
 </html>
