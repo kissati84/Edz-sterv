@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Egyéves edzésterv – TRX, futás & evezőgép</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
+<style>
+:root{ color-scheme: light; --bg:#eef1f6; --card:#ffffff; --ink:#1e293b; --muted:#64748b;
+--blue:#1e3a8a; --blue2:#2563eb; --run:#dbeafe; --trx:#dcfce7; --row:#fef3c7; --rest:#f1f5f9;
+--border:#e2e8f0; --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.05);
+--shadow-lg:0 4px 12px rgba(15,23,42,.08),0 16px 40px rgba(15,23,42,.08); }
+*{box-sizing:border-box}
+body{margin:0;background:
+ radial-gradient(1200px 500px at 100% -10%,#dbeafe55,transparent),
+ radial-gradient(900px 400px at -10% 0,#dcfce755,transparent),var(--bg);
+ color:var(--ink);font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+.wrap{max-width:980px;margin:0 auto;padding:0 16px 70px}
+header{background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0ea5e9);border-radius:0 0 24px 24px;
+ padding:34px 26px 30px;color:#fff;box-shadow:var(--shadow-lg);margin-bottom:22px;position:relative;overflow:hidden}
+header::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;border-radius:50%;
+ background:radial-gradient(circle,#ffffff22,transparent 70%)}
+header h1,header p,header .badges{position:relative;z-index:2;max-width:62%}
+.hero{position:absolute;right:0;top:0;height:100%;width:42%;object-fit:cover;z-index:0;
+ -webkit-mask-image:linear-gradient(90deg,transparent,#000 55%);mask-image:linear-gradient(90deg,transparent,#000 55%);opacity:.85}
+@media(max-width:640px){.hero{opacity:.25;width:60%}header h1,header p,header .badges{max-width:100%}}
+header h1{font-size:30px;margin:0 0 6px;font-weight:800;letter-spacing:-.5px}
+header p{margin:0;color:#dbeafe;font-size:14px;font-weight:500}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.badges span{background:#ffffff22;border:1px solid #ffffff33;backdrop-filter:blur(4px);
+ padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600}
+.photostrip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.photostrip figure{position:relative;margin:0;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:3/2;background:#e2e8f0;cursor:pointer;transition:.2s}
+.photostrip figure:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+.photostrip figure:focus-visible{outline:3px solid var(--blue2);outline-offset:2px}
+.photostrip img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+.photostrip figure:hover img{transform:scale(1.06)}
+.photostrip figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 11px;color:#fff;font-size:15px;
+ background:linear-gradient(transparent,rgba(15,23,42,.8))}
+.photostrip figcaption b{display:block;font-weight:800}
+.photostrip figcaption span{font-size:12px;font-weight:600;opacity:.9}
+.banner{position:relative;height:160px;border-radius:16px 16px 0 0;overflow:hidden;margin:-20px -20px 16px}
+.banner img{width:100%;height:100%;object-fit:cover;display:block}
+.banner h2{position:absolute;left:18px;bottom:12px;margin:0;color:#fff;font-size:22px;text-shadow:0 2px 8px rgba(0,0,0,.5);z-index:2}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(15,23,42,.7))}
+@media(max-width:640px){.photostrip{grid-template-columns:1fr}.photostrip figure{aspect-ratio:16/9}}
+.intro{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin:0 0 22px;font-size:14px;box-shadow:var(--shadow)}
+.intro b{color:var(--blue)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:5px;vertical-align:middle}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px;position:sticky;top:8px;z-index:5}
+.tab{padding:10px 17px;border:1px solid var(--border);background:#ffffffdd;backdrop-filter:blur(8px);
+ border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink);font-weight:600;transition:.18s;box-shadow:var(--shadow)}
+.tab:hover{transform:translateY(-1px);border-color:var(--blue2)}
+.tab.active{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(37,99,235,.35)}
+.panel{display:none;animation:fade .35s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
+h2{font-size:20px;color:var(--blue);margin:2px 0 14px;font-weight:800;letter-spacing:-.3px}
+h3{font-size:15px;margin:16px 0 6px;font-weight:700}
+.months{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.mbtn{padding:9px 12px;border:1px solid var(--border);background:#fff;border-radius:12px;cursor:pointer;font-size:13px;text-align:center;min-width:84px;font-weight:700;transition:.16s}
+.mbtn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.mbtn small{display:block;color:var(--muted);font-size:10px;font-weight:600}
+.mbtn.active{background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;border-color:transparent;box-shadow:0 6px 14px rgba(37,99,235,.3)}
+.mbtn.active small{color:#e0f2fe}
+.phase{display:inline-block;font-size:11px;padding:4px 12px;border-radius:999px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#166534;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;margin-top:6px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
+tr:last-child td{border-bottom:none}
+th{background:#f1f5f9;font-weight:700;color:#334155}
+tbody tr:hover td{background:#f8fafc}
+tr.run td:first-child{box-shadow:inset 4px 0 #3b82f6}
+tr.trx td:first-child{box-shadow:inset 4px 0 #22c55e}
+tr.row td:first-child{box-shadow:inset 4px 0 #f59e0b}
+tr.rest td:first-child{box-shadow:inset 4px 0 #cbd5e1}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}#logForm{grid-template-columns:1fr!important}}
+ul{margin:6px 0;padding-left:20px}
+li{margin:4px 0;font-size:14px}
+.tip{background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-left:4px solid var(--blue2);padding:12px 14px;border-radius:8px;font-size:13px;margin:10px 0}
+.muted{color:var(--muted);font-size:13px}
+.pillrow{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
+.pill{font-size:13px;padding:10px 14px;border-radius:12px;background:var(--rest);flex:1;min-width:200px;font-weight:500;border:1px solid var(--border)}
+button{transition:.16s}button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+input,select{font-family:inherit}input:focus,select:focus{outline:2px solid var(--blue2);outline-offset:-1px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>Egyéves edzésterv</h1>
+<p>Személyre szabott terv kezdő szintről · indulás 2026 szeptember</p>
+<div class="badges"><span>🏃 Futás</span><span>💪 TRX</span><span>🚣 Evezőgép</span><span>📅 12 havi blokk</span><span>📓 Napló</span></div>
+<img class="hero" loading="lazy" alt="" aria-hidden="true" src="https://images.pexels.com/photos/16980804/pexels-photo-16980804.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop">
+</header>
+
+<div class="photostrip">
+ <figure data-go="hetek" role="button" tabindex="0"><img loading="lazy" alt="Futás" src="https://images.pexels.com/photos/878151/pexels-photo-878151.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b>🏃 Futás</b><span>Heti beosztás megnyitása →</span></figcaption></figure>
+ <figure data-go="gyak" role="button" tabindex="0"><img loading="lazy" alt="Terem / TRX" src="https://images.pexels.com/photos/36399986/pexels-photo-36399986.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b>💪 TRX / terem</b><span>Gyakorlatok megnyitása →</span></figcaption></figure>
+ <figure data-go="evezo" role="button" tabindex="0"><img loading="lazy" alt="Evezőgép" src="https://images.pexels.com/photos/7690207/pexels-photo-7690207.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b>🚣 Evezőgép</b><span>Evezőterv megnyitása →</span></figcaption></figure>
+</div>
+<div class="intro">
+A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
+<div class="legend" style="margin-top:8px">
+<span><span class="dot" style="background:#22c55e"></span><b>„A” hét – terem:</b> TRX + futás (3-4 nap)</span>
+<span><span class="dot" style="background:#f59e0b"></span><b>„B” hét – otthon:</b> evezőgép, futás nélkül (3 nap)</span>
+</div>
+<div class="legend">
+<span><span class="dot" style="background:#3b82f6"></span>Futás</span>
+<span><span class="dot" style="background:#22c55e"></span>TRX</span>
+<span><span class="dot" style="background:#f59e0b"></span>Evezés</span>
+<span><span class="dot" style="background:#cbd5e1"></span>Pihenő</span>
+</div>
+</div>
+
+<div class="tabs" id="tabs">
+<div class="tab active" data-p="ma">📍 Ma</div>
+<div class="tab" data-p="havi">Havi terv</div>
+<div class="tab" data-p="hetek">Heti sablonok</div>
+<div class="tab" data-p="evezo">Evezőterv</div>
+<div class="tab" data-p="gyak">Gyakorlatok</div>
+<div class="tab" data-p="bemeleg">Bemelegítés</div>
+<div class="tab" data-p="etkezes">Étkezés</div>
+<div class="tab" data-p="vitamin">Vitaminok</div>
+<div class="tab" data-p="naplo">Napló</div>
+<div class="tab" data-p="fotok">📸 Fotók</div>
+</div>
+
+<!-- MA -->
+<div class="panel active" id="ma">
+<div class="card" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff">
+<div id="todayBox">A terv 2026. szeptember 1-jén indul.</div>
+</div>
+<div class="card">
+<h2>Ez a heti checklist</h2>
+<p class="muted" id="weekLabel"></p>
+<div style="background:var(--rest);border-radius:999px;height:12px;overflow:hidden;margin:10px 0">
+ <div id="weekBar" style="height:100%;width:0;background:linear-gradient(90deg,#22c55e,#16a34a);transition:.4s"></div>
+</div>
+<div id="weekList"></div>
+<p class="muted" style="margin-top:8px">A pipák ebben a böngészőben tárolódnak, hetente automatikusan nullázódnak.</p>
+</div>
+</div>
+
+<!-- HAVI -->
+<div class="panel" id="havi">
+<div class="card">
+<h2>Havi blokkok</h2>
+<p class="muted">Válassz hónapot. Minden hónap kicsit nehezebb az előzőnél – ez biztosítja a folyamatos fejlődést.</p>
+<div class="months" id="months"></div>
+<div id="monthBody"></div>
+</div>
+</div>
+
+<!-- HETEK -->
+<div class="panel" id="hetek">
+<div class="card">
+<div class="banner"><img loading="lazy" alt="Futás" src="https://images.pexels.com/photos/878151/pexels-photo-878151.jpeg?auto=compress&cs=tinysrgb&w=1000&h=400&fit=crop"><h2>„A” hét – terem (TRX + futás)</h2></div>
+<table>
+<tr><th>Nap</th><th>Típus</th><th>Tartalom</th><th>Idő</th></tr>
+<tr class="run"><td>Hétfő</td><td>Futás</td><td>Kocogás-séta intervall, beszélni tudó tempó</td><td>25-30'</td></tr>
+<tr class="rest"><td>Kedd</td><td>Pihenő</td><td>Nyújtás, séta</td><td>–</td></tr>
+<tr class="trx"><td>Szerda</td><td>TRX</td><td>Teljes test körforma (guggolás, evezés, mellnyomás, plank)</td><td>35'</td></tr>
+<tr class="rest"><td>Csüt.</td><td>Pihenő</td><td>Mobilizálás</td><td>–</td></tr>
+<tr class="run"><td>Péntek</td><td>Futás</td><td>Folyamatos kocogás, kicsit hosszabb</td><td>30'</td></tr>
+<tr class="trx"><td>Szombat</td><td>TRX</td><td>Körforma (kitörés, húzás, tricepsz, térdhúzás)</td><td>35'</td></tr>
+<tr class="rest"><td>Vas.</td><td>Pihenő</td><td>Teljes pihenő</td><td>–</td></tr>
+</table>
+</div>
+<div class="card">
+<h2>„B” hét – otthon (evezőgép, futás nélkül)</h2>
+<table>
+<tr><th>Nap</th><th>Típus</th><th>Tartalom</th><th>Idő</th></tr>
+<tr class="rest"><td>Hétfő</td><td>Pihenő</td><td>Normál nap</td><td>–</td></tr>
+<tr class="row"><td>Kedd</td><td>Evezés</td><td>Alap állóképességi evezés (lásd Evezőterv)</td><td>20-30'</td></tr>
+<tr class="rest"><td>Szerda</td><td>Pihenő</td><td>Nyújtás</td><td>–</td></tr>
+<tr class="row"><td>Csüt.</td><td>Evezés</td><td>Intervall vagy technikai evezés</td><td>20-30'</td></tr>
+<tr class="rest"><td>Péntek</td><td>Pihenő</td><td>Normál nap</td><td>–</td></tr>
+<tr class="row"><td>Szombat</td><td>Evezés</td><td>Hosszabb folyamatos evezés</td><td>25-35'</td></tr>
+<tr class="rest"><td>Vas.</td><td>Pihenő</td><td>Teljes pihenő</td><td>–</td></tr>
+</table>
+<div class="tip">Otthon kiegészítheted az evezést saját testsúlyos gyakorlatokkal (guggolás, fekvőtámasz, plank), ha van rá energiád – de nem kötelező.</div>
+</div>
+</div>
+
+<!-- EVEZO -->
+<div class="panel" id="evezo">
+<div class="card">
+<div class="banner"><img loading="lazy" alt="Evezőgép" src="https://images.pexels.com/photos/7690207/pexels-photo-7690207.jpeg?auto=compress&cs=tinysrgb&w=1000&h=400&fit=crop"><h2>Kezdő evezőterv</h2></div>
+<p class="muted">Az evezés 4 lépésből áll: <b>láb → törzs → kar</b> (húzás), majd fordítva <b>kar → törzs → láb</b> (visszacsúszás). Az erő 60%-a a lábból jön! Tempó: 18-22 húzás/perc (spm) kezdőként.</p>
+<div class="tip"><b>Első 2 hét – csak technika:</b> könnyű ellenállás (3-4/10), figyelj a sorrendre, ne ráncigáld. Inkább lassú és tiszta, mint gyors és kapkodós.</div>
+<h3>Progresszió hónapról hónapra</h3>
+<table>
+<tr><th>Időszak</th><th>Cél</th><th>Mintaedzés</th></tr>
+<tr><td>1-2. hónap</td><td>Technika + alap</td><td>5' bemelegítés, 3×4' evezés / 2' séta-pihenő, 5' levezetés</td></tr>
+<tr><td>3-4. hónap</td><td>Folyamatos állóképesség</td><td>5' bem., 15-20' folyamatos evezés egyenletes tempón, 5' lev.</td></tr>
+<tr><td>5-6. hónap</td><td>Intervall bevezetés</td><td>5' bem., 6×1' erős / 1,5' könnyű, 5' lev.</td></tr>
+<tr><td>7-8. hónap</td><td>Tempó + táv</td><td>25-30' folyamatos, közben 3×2' emelt tempó</td></tr>
+<tr><td>9-10. hónap</td><td>Vegyes terhelés</td><td>5' bem., 4×3' erős / 2' könnyű + 10' folyamatos</td></tr>
+<tr><td>11-12. hónap</td><td>Fenntartás + teszt</td><td>2000 m időmérő, vagy 30' folyamatos magabiztos tempón</td></tr>
+</table>
+<h3>Gyakori kezdő hibák</h3>
+<ul>
+<li>Túl korán behajlított kar – a kar húz utoljára, nem először.</li>
+<li>Görnyedt hát – tartsd egyenes törzzsel, hasizom feszítve.</li>
+<li>Túl magas ellenállás – kezdőként 3-5/10 elég, a tempó és technika számít.</li>
+<li>Kapkodó visszacsúszás – a visszacsúszás kétszer annyi ideig tartson, mint a húzás.</li>
+</ul>
+</div>
+</div>
+
+<!-- GYAKORLATOK -->
+<div class="panel" id="gyak">
+<div class="card">
+<div class="banner"><img loading="lazy" alt="TRX / terem" src="https://images.pexels.com/photos/36399986/pexels-photo-36399986.jpeg?auto=compress&cs=tinysrgb&w=1000&h=400&fit=crop"><h2>💪 TRX gyakorlatok</h2></div>
+<table>
+<tr><th>Gyakorlat</th><th>Mit dolgoztat</th><th>Technika</th><th>Gyakori hiba</th></tr>
+<tr><td><b>TRX guggolás</b></td><td>Comb, far</td><td>Hevedert feszesen tartsd, ülj hátra mintha székre, térd a lábujj fölött, sarkon nyomj fel.</td><td>Térd befelé esik, sarok elemelkedik.</td></tr>
+<tr><td><b>TRX evezés</b></td><td>Hát, biceps</td><td>Dőlj hátra egyenes testtel, húzd a mellkasodhoz a fogantyút, lapockát zárd.</td><td>Csípő leesik, váll felhúzva.</td></tr>
+<tr><td><b>TRX mellnyomás</b></td><td>Mell, triceps</td><td>Arccal a rögzítéssel szemben, dőlj előre egyenes testtel, engedd le a mellkast, nyomd vissza.</td><td>Behajló derék, könyök túl szét.</td></tr>
+<tr><td><b>TRX kitörés</b></td><td>Comb, far, egyensúly</td><td>Hátsó láb a hevederben, elülső térd 90°-ig, törzs egyenes.</td><td>Elülső térd túlnyúlik a lábujjon.</td></tr>
+<tr><td><b>TRX tricepsz</b></td><td>Triceps</td><td>Előredőlve, könyök magasan rögzítve, csak az alkar mozog.</td><td>Könyök leesik, egész kar mozog.</td></tr>
+<tr><td><b>TRX plank / térdhúzás</b></td><td>Törzs, has</td><td>Láb a hevederben, alkartámasz vagy tenyértámasz, törzs feszes, húzd a térded a mellkashoz.</td><td>Csípő ég felé / lelóg, lazán tartott has.</td></tr>
+</table>
+</div>
+<div class="card">
+<h2>🚣 Evezőgép – a 4 fázis</h2>
+<table>
+<tr><th>Fázis</th><th>Mozdulat</th><th>Figyelj</th></tr>
+<tr><td><b>1. Catch (start)</b></td><td>Térd hajlítva, sípcsont függőleges, kar nyújtva, törzs enyhén előre.</td><td>Egyenes hát, vállat ne húzd fel.</td></tr>
+<tr><td><b>2. Drive (húzás)</b></td><td>Először a lábbal nyomj, majd dől hátra a törzs, végül húz a kar.</td><td>Sorrend: láb → törzs → kar. Az erő 60%-a a lábból!</td></tr>
+<tr><td><b>3. Finish</b></td><td>Láb nyújtva, enyhén hátradőlve, fogantyú a bordák alatt.</td><td>Ne dőlj túlságosan hátra.</td></tr>
+<tr><td><b>4. Recovery (vissza)</b></td><td>Kar előre → törzs előre → térd hajlik. Lassan, a húzás kétszeresének megfelelő idő alatt.</td><td>Ne kapkodd, itt pihensz.</td></tr>
+</table>
+<div class="tip">Tempó kezdőként 18-22 húzás/perc (spm), ellenállás 3-5/10. A tisztaság fontosabb a sebességnél.</div>
+</div>
+</div>
+
+<!-- BEMELEGITES -->
+<div class="panel" id="bemeleg">
+<div class="card">
+<h2>🔥 Bemelegítés (5-8 perc)</h2>
+<p class="muted">Minden edzés előtt – felkészíti az izmokat és ízületeket, csökkenti a sérülésveszélyt.</p>
+<ol>
+<li><b>Pulzusemelés (2-3'):</b> helyben kocogás, magas térd, sarokemelés, vagy könnyű evezés alacsony ellenállással.</li>
+<li><b>Dinamikus nyújtás:</b> karkörzés előre-hátra (10-10), törzsfordítás (10), csípőkörzés (8/irány).</li>
+<li><b>Lábmunka:</b> testsúlyos guggolás (10), kitörés helyben (6/láb), bokakörzés.</li>
+<li><b>Aktiválás:</b> 5 lassú fekvőtámasz térdről, 20 mp plank.</li>
+</ol>
+<div class="tip">Evezés előtt különösen fontos a hát és csípő bemelegítése – kezdd 2-3 perc nagyon könnyű evezéssel.</div>
+</div>
+<div class="card">
+<h2>🧘 Levezetés és nyújtás (5-7 perc)</h2>
+<p class="muted">Edzés után – segíti a regenerációt és a mozgékonyságot. Minden nyújtást 20-30 mp-ig tarts, ne pattogtass.</p>
+<div class="grid2">
+<div><h3>Alsótest</h3><ul>
+<li>Comb hátsó (hajlított törzzsel a láb felé)</li>
+<li>Comb elülső (állva, sarok a farhoz)</li>
+<li>Vádli (faltámasz)</li>
+<li>Csípőhajlító kitörésből</li>
+</ul></div>
+<div><h3>Felsőtest</h3><ul>
+<li>Mell (ajtófélfás / falas)</li>
+<li>Hát (macska-teve gerincmozgás)</li>
+<li>Váll (kar a mellkas előtt áthúzva)</li>
+<li>Triceps (könyök a fej mögött)</li>
+</ul></div>
+</div>
+<div class="tip">Futás után a comb és vádli, evezés után a hát, comb hátsó és váll nyújtása a legfontosabb.</div>
+</div>
+</div>
+
+<!-- ETKEZES -->
+<div class="panel" id="etkezes">
+<div class="card">
+<h2>Étkezési tippek</h2>
+<p class="muted">Nem diéta, hanem fenntartható alapelvek általános fitt formához és jó regenerációhoz.</p>
+<div class="grid2">
+<div>
+<h3>Alapelvek</h3>
+<ul>
+<li><b>Fehérje minden főétkezéshez</b> – tojás, csirke, hal, túró, hüvelyesek. Kb. 1,4-1,6 g/ttkg/nap az izomregenerációhoz.</li>
+<li><b>Összetett szénhidrát</b> energiához – zab, barna rizs, burgonya, teljes kiőrlésű kenyér, főleg edzésnapokon.</li>
+<li><b>Zöldség/gyümölcs</b> minden nap, legalább 400 g – színes a jó.</li>
+<li><b>Jó zsírok</b> – olívaolaj, dió, avokádó, zsíros hal.</li>
+<li><b>Víz</b> – napi 2-2,5 l, edzésnapokon több.</li>
+</ul>
+</div>
+<div>
+<h3>Edzés körül</h3>
+<ul>
+<li><b>Előtte (1-2 órával):</b> könnyű szénhidrát + kevés fehérje – pl. banán + joghurt.</li>
+<li><b>Utána (1 órán belül):</b> fehérje + szénhidrát – pl. túró gyümölccsel, vagy csirke rizzsel.</li>
+<li><b>Esti edzés után</b> nyugodtan egyél normál vacsorát, ne hagyd ki.</li>
+</ul>
+<h3>Amit érdemes mérsékelni</h3>
+<ul>
+<li>Cukros üdítő, alkohol – üres kalória, rontja a regenerációt.</li>
+<li>Erősen feldolgozott, sós nassok.</li>
+<li>Túl késői, nehéz vacsora – rontja az alvást.</li>
+</ul>
+</div>
+</div>
+<div class="tip"><b>Egyszerű szabály:</b> a tányér fele zöldség, negyede fehérje, negyede szénhidrát. Ez a legtöbb étkezésnél működik.</div>
+</div>
+</div>
+
+<!-- VITAMIN -->
+<div class="panel" id="vitamin">
+<div class="card">
+<h2>Vitamin- és kiegészítő tippek</h2>
+<div class="tip">Az alábbiak általános tájékoztató tippek, nem orvosi tanács. Étrend-kiegészítő szedése előtt – főleg ha gyógyszert szedsz vagy van fennálló betegséged – kérdezd meg háziorvosod, és ha lehet, vérvizsgálattal célozz (pl. D-vitamin, vas).</div>
+<table>
+<tr><th>Kiegészítő</th><th>Miért hasznos</th><th>Megjegyzés</th></tr>
+<tr><td><b>D-vitamin</b></td><td>Csont, immunrendszer, izomműködés. Magyarországon ősztől tavaszig sokaknál alacsony.</td><td>Tipikusan napi 1000-2000 NE okt–márc. Vérszinttől függ.</td></tr>
+<tr><td><b>Omega-3</b></td><td>Gyulladáscsökkentés, szív, ízületek, regeneráció.</td><td>Heti 2× zsíros hal helyettesítheti; vagy halolaj kapszula.</td></tr>
+<tr><td><b>Magnézium</b></td><td>Izomgörcs ellen, idegműködés, alvás – edzés mellett nő az igény.</td><td>Este, kb. 200-300 mg. Citrát jól felszívódik.</td></tr>
+<tr><td><b>Fehérjepor</b> (opció)</td><td>Ha nehéz kiételből kihozni a napi fehérjét.</td><td>Kiegészítő, nem alap. Tejsavó vagy növényi.</td></tr>
+<tr><td><b>C-vitamin</b></td><td>Immun, kollagén, antioxidáns.</td><td>Zöldség/gyümölcsből rendszerint elég; télen segíthet pótolni.</td></tr>
+<tr><td><b>B12 / vas</b></td><td>Energia, vérképzés, állóképesség.</td><td>Csak igazolt hiány esetén pótold – a vas túladagolása káros.</td></tr>
+</table>
+<h3>Amin a kiegészítők nem segítenek</h3>
+<p class="muted">A jó alvás (7-8 óra), a változatos étrend és a fokozatos terhelés többet ér bármilyen tablettánál. A kiegészítő csak „kiegészít”.</p>
+</div>
+</div>
+
+</div>
+
+<!-- NAPLO -->
+<div class="panel" id="naplo">
+<div class="card">
+<h2>Edzésnapló</h2>
+<p class="muted">Rögzítsd az elvégzett edzéseket. A bejegyzések ebben a böngészőben tárolódnak (offline is működik).</p>
+<div style="display:grid;grid-template-columns:130px 130px 1fr;gap:8px;align-items:end" id="logForm">
+ <div><label class="muted">Dátum</label><input type="date" id="lDate" style="width:100%;padding:7px;border:1px solid var(--border);border-radius:6px"></div>
+ <div><label class="muted">Típus</label>
+  <select id="lType" style="width:100%;padding:7px;border:1px solid var(--border);border-radius:6px">
+   <option>🏃 Futás</option><option>💪 TRX</option><option>🚣 Evezés</option><option>🧘 Egyéb</option>
+  </select></div>
+ <div><label class="muted">Megjegyzés (idő, távolság, érzés…)</label><input type="text" id="lNote" placeholder="pl. 28', jól ment" style="width:100%;padding:7px;border:1px solid var(--border);border-radius:6px"></div>
+</div>
+<button id="lAdd" style="margin-top:10px;padding:9px 18px;background:var(--blue);color:#fff;border:none;border-radius:8px;cursor:pointer;font-size:14px">Hozzáadás</button>
+<div id="logStats" class="tip" style="margin-top:14px"></div>
+<table id="logTable" style="margin-top:8px"><tbody></tbody></table>
+<button id="lExport" style="margin-top:10px;padding:7px 14px;background:#fff;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px">Export (CSV)</button>
+</div>
+<div class="card">
+<h2>📊 Haladás</h2>
+<div class="grid2">
+<div><h3>Edzések havonta</h3><canvas id="chMonth" height="200"></canvas></div>
+<div><h3>Típusok megoszlása</h3><canvas id="chType" height="200"></canvas></div>
+</div>
+<p class="muted" id="chEmpty" style="margin-top:8px"></p>
+</div>
+</div>
+
+<!-- FOTOK -->
+<div class="panel" id="fotok">
+<div class="card">
+<h2>📸 Haladásfotók</h2>
+<p class="muted">Tölts fel havonta egy fotót, hogy lásd a változást. A képek csak ebben a böngészőben tárolódnak (privát), kicsinyítve.</p>
+<div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-top:8px">
+ <div><label class="muted">Hónap</label><br><input type="month" id="phMonth" style="padding:8px;border:1px solid var(--border);border-radius:8px"></div>
+ <div><label class="muted">Fotó</label><br><input type="file" id="phFile" accept="image/*" style="font-size:13px"></div>
+</div>
+<p class="muted" id="phMsg" style="margin-top:8px"></p>
+<div id="phGallery" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:14px"></div>
+</div>
+<div class="card" id="compareCard" style="display:none">
+<h2>↔️ Előtte – utána</h2>
+<div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:12px">
+ <div><label class="muted">Előtte</label><br><select id="cmpA" style="padding:8px;border:1px solid var(--border);border-radius:8px"></select></div>
+ <div><label class="muted">Utána</label><br><select id="cmpB" style="padding:8px;border:1px solid var(--border);border-radius:8px"></select></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+ <div><div class="muted" id="cmpLA" style="text-align:center;font-weight:700;margin-bottom:6px"></div><img id="cmpIA" style="width:100%;border-radius:12px;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--border)"></div>
+ <div><div class="muted" id="cmpLB" style="text-align:center;font-weight:700;margin-bottom:6px"></div><img id="cmpIB" style="width:100%;border-radius:12px;aspect-ratio:3/4;object-fit:cover;border:1px solid var(--border)"></div>
+</div>
+</div>
+</div>
+
+<script>
+const months = [
+ {m:"Szept.",y:"1. hó",phase:"Alapozás",focus:"Beszokás, technika, mozgásminták rögzítése. Cél a rendszeresség, nem a teljesítmény.",run:"Futás: 2×/„A” hét, kocogás-séta intervall, 25-30'.",trx:"TRX: 2 kör, alapgyakorlatok, technikára figyelve.",row:"Evezés: csak technika, könnyű ellenállás, 3×4' / pihenő."},
+ {m:"Okt.",y:"2. hó",phase:"Alapozás",focus:"Az alapok stabilizálása, kicsit hosszabb terhelések. Test hozzászokik a rendszerhez.",run:"Futás: futószakaszok hossza nő (1,5-2' kocogás / 1' séta).",trx:"TRX: 2-3 kör, ismétlésszám emelése.",row:"Evezés: 3-4×4' folyamatos, tisztán."},
+ {m:"Nov.",y:"3. hó",phase:"Fejlesztés",focus:"Folyamatos terhelés felé. Futásban és evezésben is hosszabb folyamatos blokkok.",run:"Futás: 5-10' megszakítás nélküli kocogás célként.",trx:"TRX: nehezítés testszöggel, lassú tempó.",row:"Evezés: 15-20' folyamatos egyenletes tempón."},
+ {m:"Dec.",y:"4. hó",phase:"Fenntartás",focus:"Ünnepi időszak – cél a megtartás, nem a fejlődés. Kevés idő is jobb a semminél.",run:"Futás: heti 1 is elég, ha sűrű az időszak.",trx:"TRX: rövid, tömör körforma 25'.",row:"Evezés: 15' folyamatos, fenntartó."},
+ {m:"Jan.",y:"5. hó",phase:"Fejlesztés",focus:"Újraindítás teljes lendülettel. Intervallok bevezetése mindkét eszközön.",run:"Futás: tempóváltós futás, rövid gyorsabb szakaszok.",trx:"TRX: 3 kör, hosszabb plankok.",row:"Evezés: 6×1' erős / 1,5' könnyű intervall."},
+ {m:"Febr.",y:"6. hó",phase:"Erő",focus:"Erőhangsúly: TRX-ben nehezebb szögek, evezésben erősebb húzások.",run:"Futás: dombos/emelkedős szakasz vagy gyorsítások.",trx:"TRX: kevesebb ismétlés, nagyobb terhelés, lassú excentrikus.",row:"Evezés: erősebb ellenállás (5-6/10), 4×3'."},
+ {m:"Márc.",y:"7. hó",phase:"Intenzitás",focus:"Magasabb intenzitás, jobb kondíció. Pulzus feljebb megy a kemény szakaszokban.",run:"Futás: 20-25' folyamatos magabiztos tempón.",trx:"TRX: körforma rövidebb pihenőkkel.",row:"Evezés: 25-30' közben 3×2' emelt tempó."},
+ {m:"Ápr.",y:"8. hó",phase:"Állóképesség",focus:"Hosszabb folyamatos terhelések, aerob bázis bővítése.",run:"Futás: leghosszabb futások (30'+).",trx:"TRX: állóképességi körforma több körrel.",row:"Evezés: 30' folyamatos egyenletes tempón."},
+ {m:"Máj.",y:"9. hó",phase:"Csúcsterhelés",focus:"Az év legkeményebb blokkja – vegyes, változatos terhelés.",run:"Futás: tempó + táv kombináció.",trx:"TRX: legnehezebb variációk, ha a technika engedi.",row:"Evezés: 4×3' erős / 2' könnyű + 10' folyamatos."},
+ {m:"Jún.",y:"10. hó",phase:"Teljesítmény",focus:"Eredmények mérése, formába lendülés a nyárra.",run:"Futás: kis táv-/időteszt, hol tartasz.",trx:"TRX: saját rekordok döntögetése (plank idő, ismétlés).",row:"Evezés: 2000 m időmérő, jegyezd fel."},
+ {m:"Júl.",y:"11. hó",phase:"Fenntartás",focus:"Nyári lazább blokk – tartsd a formát, élvezd a mozgást, akár szabadban.",run:"Futás: szabadtéri, kötetlenebb futások.",trx:"TRX: ismert körforma, kényelmes tempón.",row:"Evezés: 20-25' fenntartó, könnyű."},
+ {m:"Aug.",y:"12. hó",phase:"Levezetés + értékelés",focus:"Év végi visszatekintés, könnyebb terhelés, tervezés a következő évre.",run:"Futás: laza, élvezetes futások.",trx:"TRX: könnyű regeneráló körforma.",row:"Evezés: technikai finomítás, 2. évi célok kitűzése."},
+];
+
+const mWrap=document.getElementById('months');
+const body=document.getElementById('monthBody');
+months.forEach((mo,i)=>{
+ const b=document.createElement('div');
+ b.className='mbtn'+(i===0?' active':'');
+ b.innerHTML=mo.m+'<small>'+mo.y+'</small>';
+ b.onclick=()=>{document.querySelectorAll('.mbtn').forEach(x=>x.classList.remove('active'));b.classList.add('active');render(i);};
+ mWrap.appendChild(b);
+});
+function render(i){
+ const mo=months[i];
+ body.innerHTML=`<span class="phase">${mo.phase}</span>
+ <p>${mo.focus}</p>
+ <div class="pillrow">
+ <span class="pill" style="background:var(--run)">🏃 ${mo.run}</span>
+ <span class="pill" style="background:var(--trx)">💪 ${mo.trx}</span>
+ <span class="pill" style="background:var(--row)">🚣 ${mo.row}</span>
+ </div>
+ <p class="muted" style="margin-top:10px">A heti felosztást lásd a „Heti sablonok” fülön: az „A” (terem) és „B” (otthon) hét felváltva ismétlődik.</p>`;
+}
+render(0);
+
+function activateTab(p){
+ document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('active',x.dataset.p===p));
+ document.querySelectorAll('.panel').forEach(x=>x.classList.toggle('active',x.id===p));
+ if(p==='naplo'&&window.renderCharts)renderCharts();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.tab').forEach(t=>{t.onclick=()=>activateTab(t.dataset.p);});
+document.querySelectorAll('.photostrip figure').forEach(f=>{
+ const go=()=>activateTab(f.dataset.go);
+ f.onclick=go;
+ f.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go();}};
+});
+
+// ---- Napló (localStorage) ----
+const KEY='edzesnaplo_v1';
+const lDate=document.getElementById('lDate');
+lDate.value=new Date().toISOString().slice(0,10);
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||[]}catch(e){return[]}}
+function save(a){localStorage.setItem(KEY,JSON.stringify(a))}
+function renderLog(){
+ const a=load().sort((x,y)=>y.date.localeCompare(x.date));
+ const tb=document.querySelector('#logTable tbody');
+ tb.innerHTML='<tr><th>Dátum</th><th>Típus</th><th>Megjegyzés</th><th></th></tr>';
+ a.forEach(e=>{
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td>${e.date}</td><td>${e.type}</td><td>${e.note||''}</td>
+   <td style="text-align:center"><span data-id="${e.id}" class="del" style="cursor:pointer;color:#ef4444">✕</span></td>`;
+  tb.appendChild(tr);
+ });
+ tb.querySelectorAll('.del').forEach(d=>d.onclick=()=>{save(load().filter(x=>x.id!=d.dataset.id));renderLog()});
+ const now=new Date(),mKey=now.toISOString().slice(0,7);
+ const thisMonth=a.filter(e=>e.date.slice(0,7)===mKey).length;
+ document.getElementById('logStats').innerHTML=
+  `<b>Összesen:</b> ${a.length} edzés · <b>Ebben a hónapban:</b> ${thisMonth} · <b>Sorozat:</b> ${streak(a)} hét`;
+}
+function streak(a){
+ if(!a.length)return 0;
+ const weeks=new Set(a.map(e=>{const d=new Date(e.date);const o=new Date(d);o.setDate(d.getDate()-((d.getDay()+6)%7));return o.toISOString().slice(0,10)}));
+ let s=0,cur=new Date();cur.setDate(cur.getDate()-((cur.getDay()+6)%7));
+ for(;;){const k=cur.toISOString().slice(0,10);if(weeks.has(k)){s++;cur.setDate(cur.getDate()-7)}else break}
+ return s;
+}
+document.getElementById('lAdd').onclick=()=>{
+ const a=load();
+ a.push({id:Date.now(),date:lDate.value,type:document.getElementById('lType').value,note:document.getElementById('lNote').value});
+ save(a);document.getElementById('lNote').value='';renderLog();
+};
+document.getElementById('lExport').onclick=()=>{
+ const a=load().sort((x,y)=>x.date.localeCompare(y.date));
+ const csv='Datum,Tipus,Megjegyzes\n'+a.map(e=>`${e.date},"${e.type}","${(e.note||'').replace(/"/g,'""')}"`).join('\n');
+ const b=new Blob([csv],{type:'text/csv'});const u=URL.createObjectURL(b);
+ const a2=document.createElement('a');a2.href=u;a2.download='edzesnaplo.csv';a2.click();URL.revokeObjectURL(u);
+};
+// ---- Grafikonok ----
+let chM=null,chT=null;
+function renderCharts(){
+ const a=load();
+ const empty=document.getElementById('chEmpty');
+ if(!a.length){empty.textContent='Még nincs adat – rögzíts edzéseket a naplóban, és itt megjelennek a grafikonok.';}
+ else empty.textContent='';
+ const byMonth={};a.forEach(e=>{const k=e.date.slice(0,7);byMonth[k]=(byMonth[k]||0)+1});
+ const mk=Object.keys(byMonth).sort();
+ const byType={};a.forEach(e=>{byType[e.type]=(byType[e.type]||0)+1});
+ if(chM)chM.destroy();if(chT)chT.destroy();
+ chM=new Chart(document.getElementById('chMonth'),{type:'bar',
+  data:{labels:mk,datasets:[{data:mk.map(k=>byMonth[k]),backgroundColor:'#2563eb',borderRadius:6}]},
+  options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
+ const tl=Object.keys(byType);
+ chT=new Chart(document.getElementById('chType'),{type:'doughnut',
+  data:{labels:tl,datasets:[{data:tl.map(t=>byType[t]),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#a855f7','#94a3b8']}]},
+  options:{plugins:{legend:{position:'bottom'}}}});
+}
+const _orig=renderLog;renderLog=function(){_orig();renderCharts();};
+
+// ---- Mai edzés + heti checklist ----
+const START=new Date('2026-09-01T00:00:00');
+function monday(d){const o=new Date(d);o.setHours(0,0,0,0);o.setDate(o.getDate()-((o.getDay()+6)%7));return o;}
+const weekA=[['Futás','Kocogás-séta intervall, 25-30\''],['Pihenő',''],['TRX','Teljes test körforma, 35\''],['Pihenő',''],['Futás','Folyamatos kocogás, 30\''],['TRX','Körforma (kitörés, húzás), 35\''],['Pihenő','']];
+const weekB=[['Pihenő',''],['Evezés','Alap állóképességi evezés, 20-30\''],['Pihenő',''],['Evezés','Intervall/technikai evezés, 20-30\''],['Pihenő',''],['Evezés','Hosszabb folyamatos evezés, 25-35\''],['Pihenő','']];
+const dayNames=['Hétfő','Kedd','Szerda','Csüt.','Péntek','Szombat','Vasárnap'];
+function setupToday(){
+ const now=new Date();now.setHours(0,0,0,0);
+ const box=document.getElementById('todayBox');
+ if(now<START){box.innerHTML='<b>A terv 2026. szeptember 1-jén indul.</b><br>Addig is böngészd át a havi tervet és a gyakorlatokat!';
+  document.getElementById('weekLabel').textContent='A terv még nem indult el.';return;}
+ const wk=Math.floor((monday(now)-monday(START))/(7*864e5));
+ const isA=wk%2===0;const sched=isA?weekA:weekB;
+ const di=(now.getDay()+6)%7;const t=sched[di];
+ const wkType=isA?'„A” hét – terem (TRX + futás)':'„B” hét – otthon (evezőgép)';
+ const emoji={'Futás':'🏃','TRX':'💪','Evezés':'🚣','Pihenő':'😴'}[t[0]]||'';
+ box.innerHTML=`<div style="font-size:13px;opacity:.85">${wkType} · ${dayNames[di]}</div>
+  <div style="font-size:28px;font-weight:800;margin:6px 0">${emoji} ${t[0]}</div>
+  <div style="opacity:.92">${t[1]||'Pihenj és regenerálódj a következő edzésre.'}</div>`;
+ // checklist
+ const wkKey='wk_'+monday(now).toISOString().slice(0,10);
+ let done=[];try{done=JSON.parse(localStorage.getItem(wkKey))||[]}catch(e){}
+ document.getElementById('weekLabel').textContent=wkType;
+ const list=document.getElementById('weekList');list.innerHTML='';
+ const trainings=sched.map((s,i)=>({s,i})).filter(x=>x.s[0]!=='Pihenő');
+ trainings.forEach(({s,i})=>{
+  const ch=done.includes(i);
+  const row=document.createElement('label');
+  row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin:6px 0;cursor:pointer;'+(ch?'background:#f0fdf4':'');
+  row.innerHTML=`<input type="checkbox" ${ch?'checked':''} style="width:18px;height:18px">
+   <span><b>${dayNames[i]}</b> · ${({'Futás':'🏃','TRX':'💪','Evezés':'🚣'}[s[0]])} ${s[0]} <span class="muted">– ${s[1]}</span></span>`;
+  row.querySelector('input').onchange=e=>{
+   if(e.target.checked)done.push(i);else done=done.filter(x=>x!==i);
+   localStorage.setItem(wkKey,JSON.stringify(done));setupToday();
+  };
+  list.appendChild(row);
+ });
+ const pct=trainings.length?Math.round(done.filter(i=>trainings.some(t=>t.i===i)).length/trainings.length*100):0;
+ document.getElementById('weekBar').style.width=pct+'%';
+}
+setupToday();
+renderLog();
+
+// ---- Haladásfotók ----
+const PKEY='edzes_fotok_v1';
+const phMonth=document.getElementById('phMonth');
+phMonth.value=new Date().toISOString().slice(0,7);
+function loadPhotos(){try{return JSON.parse(localStorage.getItem(PKEY))||{}}catch(e){return{}}}
+function savePhotos(o){localStorage.setItem(PKEY,JSON.stringify(o))}
+function resize(file,cb){
+ const img=new Image();const r=new FileReader();
+ r.onload=()=>{img.onload=()=>{
+  const max=700;let{width:w,height:h}=img;
+  if(w>h&&w>max){h=h*max/w;w=max}else if(h>max){w=w*max/h;h=max}
+  const c=document.createElement('canvas');c.width=w;c.height=h;
+  c.getContext('2d').drawImage(img,0,0,w,h);
+  cb(c.toDataURL('image/jpeg',0.7));
+ };img.src=r.result;};
+ r.readAsDataURL(file);
+}
+function renderGallery(){
+ const o=loadPhotos();const g=document.getElementById('phGallery');g.innerHTML='';
+ const keys=Object.keys(o).sort();
+ if(!keys.length){g.innerHTML='<p class="muted">Még nincs feltöltött fotó.</p>';return;}
+ keys.forEach(k=>{
+  const d=document.createElement('div');
+  d.style.cssText='border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)';
+  d.innerHTML=`<img src="${o[k]}" style="width:100%;display:block;aspect-ratio:3/4;object-fit:cover">
+   <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 10px;font-size:13px;font-weight:700">
+   <span>${k}</span><span data-k="${k}" class="phDel" style="cursor:pointer;color:#ef4444">✕</span></div>`;
+  g.appendChild(d);
+ });
+ g.querySelectorAll('.phDel').forEach(b=>b.onclick=()=>{const o=loadPhotos();delete o[b.dataset.k];savePhotos(o);renderGallery();});
+ updateCompare();
+}
+function showCompare(){
+ const o=loadPhotos();
+ document.getElementById('cmpLA').textContent=cmpA.value;document.getElementById('cmpIA').src=o[cmpA.value]||'';
+ document.getElementById('cmpLB').textContent=cmpB.value;document.getElementById('cmpIB').src=o[cmpB.value]||'';
+}
+function updateCompare(){
+ const keys=Object.keys(loadPhotos()).sort();
+ const card=document.getElementById('compareCard');
+ if(keys.length<2){card.style.display='none';return;}
+ card.style.display='';
+ const opts=keys.map(k=>`<option>${k}</option>`).join('');
+ const a=cmpA.value,b=cmpB.value;
+ cmpA.innerHTML=opts;cmpB.innerHTML=opts;
+ cmpA.value=keys.includes(a)?a:keys[0];
+ cmpB.value=keys.includes(b)?b:keys[keys.length-1];
+ showCompare();
+}
+const cmpA=document.getElementById('cmpA'),cmpB=document.getElementById('cmpB');
+cmpA.onchange=showCompare;cmpB.onchange=showCompare;
+document.getElementById('phFile').onchange=e=>{
+ const f=e.target.files[0];if(!f)return;
+ const msg=document.getElementById('phMsg');
+ resize(f,data=>{
+  const o=loadPhotos();const exists=o[phMonth.value];
+  o[phMonth.value]=data;
+  try{savePhotos(o);msg.textContent=phMonth.value+' fotó '+(exists?'frissítve':'mentve')+'.';renderGallery();}
+  catch(err){msg.textContent='Nem fért el a tárhelyben – törölj néhány régi fotót.';}
+ });
+ e.target.value='';
+};
+renderGallery();
+</script>
+</body>
+</html>
