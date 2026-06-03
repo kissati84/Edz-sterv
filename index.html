@@ -1,138 +1,197 @@
 <!DOCTYPE html>
+<script type="application/json" id="cowork-artifact-meta">
+{
+  "name": "Eves Edzesterv",
+  "schemaVersion": 1,
+  "description": "Egyéves interaktív edzésterv kezdőknek: 12 havi blokk, váltakozó hetek (terem: TRX+futás / otthon: evezőgép), kezdő evezőterv, étkezési és vitamin tippek. Statikus tartalom, nincs külső adatforrás."
+}
+</script>
 <html lang="hu">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Egyéves edzésterv – TRX, futás & evezőgép</title>
+<title>Éves edzésterv – TRX, futás & evezőgép</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.0/dist/chart.umd.js" integrity="sha384-iU8HYtnGQ8Cy4zl7gbNMOhsDTTKX02BTXptVP/vqAWIaTfM7isw76iyZCsjL2eVi" crossorigin="anonymous"></script>
 <style>
-:root{ color-scheme: light; --bg:#eef1f6; --card:#ffffff; --ink:#1e293b; --muted:#64748b;
---blue:#1e3a8a; --blue2:#2563eb; --run:#dbeafe; --trx:#dcfce7; --row:#fef3c7; --rest:#f1f5f9;
---border:#e2e8f0; --shadow:0 1px 3px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.05);
---shadow-lg:0 4px 12px rgba(15,23,42,.08),0 16px 40px rgba(15,23,42,.08); }
+:root{ color-scheme: light;
+ --bg:#f3f1ec; --bg-2:#eceae3; --card:#fbfaf7; --white:#ffffff; --ink:#16171c;
+ --ink-soft:#4a4d57; --muted:#83868f;
+ --blue:#2f64df; --blue2:#2f64df;
+ --run:#e7eefc; --trx:#e6f3ec; --row:#f7efdc; --rest:#edece6;
+ --run-s:#2f64df; --trx-s:#2a9268; --row-s:#b78327;
+ --border:rgba(22,23,28,.12); --border-soft:rgba(22,23,28,.07);
+ --shadow:0 1px 2px rgba(22,23,28,.04),0 14px 34px -22px rgba(22,23,28,.22);
+ --shadow-lg:0 2px 6px rgba(22,23,28,.05),0 22px 50px -26px rgba(22,23,28,.30);
+ --r:18px; --font:"Hanken Grotesk",-apple-system,system-ui,sans-serif;
+ --display:"Bricolage Grotesque",sans-serif; --mono:"JetBrains Mono",monospace; }
 *{box-sizing:border-box}
-body{margin:0;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;background:
- radial-gradient(1200px 500px at 100% -10%,#dbeafe55,transparent),
- radial-gradient(900px 400px at -10% 0,#dcfce755,transparent),var(--bg);
- color:var(--ink);font-family:-apple-system,'Segoe UI',Roboto,Arial,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
-.wrap{width:min(900px,100%);margin:0 auto;padding:0 0 70px}
-@media(max-width:932px){.wrap{padding-left:16px;padding-right:16px}}
-header{position:relative;overflow:hidden;border-radius:0 0 24px 24px;color:#fff;box-shadow:var(--shadow-lg);
- margin-bottom:24px;padding:40px clamp(24px,4vw,44px) 34px;
- background:linear-gradient(135deg,#1e3a8a,#2563eb 55%,#0ea5e9)}
-header h1,header p,header .badges{position:relative;z-index:2}
-.hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;opacity:.4}
+body{margin:0;overflow-x:hidden;display:flex;flex-direction:column;align-items:center;background:var(--bg);
+ color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{width:min(940px,100%);margin:0 auto;padding:0 0 80px}
+@media(max-width:972px){.wrap{padding-left:18px;padding-right:18px}}
+h1,h2,h3,h4{font-family:var(--display);letter-spacing:-.02em;line-height:1.08}
+
+/* ---- HEADER / MASTHEAD ---- */
+header{position:relative;overflow:hidden;border-radius:0 0 26px 26px;color:var(--bg);
+ box-shadow:var(--shadow-lg);margin-bottom:26px;padding:46px clamp(24px,4vw,48px) 40px;background:#3a3d47}
+header h1,header p,header .badges,header .eyebrow{position:relative;z-index:2}
+.hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 60%;z-index:0;opacity:.40}
 header::after{content:"";position:absolute;inset:0;z-index:1;
- background:linear-gradient(135deg,rgba(30,58,138,.82),rgba(37,99,235,.62) 55%,rgba(14,165,233,.55))}
-header h1{font-size:30px;margin:0 0 6px;font-weight:800;letter-spacing:-.5px}
-header p{margin:0;color:#dbeafe;font-size:14px;font-weight:500}
-.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.badges span{background:#ffffff22;border:1px solid #ffffff33;backdrop-filter:blur(4px);
- padding:5px 12px;border-radius:999px;font-size:12px;font-weight:600}
-.photostrip{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
-.photostrip figure{position:relative;margin:0;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);aspect-ratio:3/2;background:#e2e8f0;cursor:pointer;transition:.2s}
-.photostrip figure:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
+ background:linear-gradient(105deg,rgba(40,42,50,.86) 28%,rgba(40,42,50,.50) 72%,rgba(40,42,50,.22))}
+header .eyebrow{font-family:var(--mono);font-weight:500;font-size:12px;letter-spacing:.2em;text-transform:uppercase;color:color-mix(in srgb,var(--bg) 62%,transparent);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+header .eyebrow::before{content:"";width:26px;height:1.5px;background:currentColor;opacity:.6}
+header h1{font-size:clamp(30px,5vw,46px);margin:0 0 10px;font-weight:700;letter-spacing:-.03em;max-width:18ch}
+header p{margin:0;color:color-mix(in srgb,var(--bg) 78%,transparent);font-size:15px;font-weight:500}
+.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.badges span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(4px);
+ padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:600;font-family:var(--mono);letter-spacing:.02em}
+.hinner{position:relative;z-index:2}
+.hstats{display:flex;gap:clamp(20px,4vw,38px);flex-wrap:wrap;margin-top:28px;padding-top:24px;border-top:1px solid rgba(255,255,255,.16)}
+.hstat .hn{font-family:var(--display);font-weight:700;font-size:clamp(28px,4vw,36px);line-height:1;letter-spacing:-.03em}
+.hstat .hl{font-size:11.5px;color:color-mix(in srgb,var(--bg) 58%,transparent);margin-top:7px;font-family:var(--mono);letter-spacing:.05em;text-transform:uppercase}
+
+/* ---- PHOTO STRIP ---- */
+.photostrip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
+.photostrip figure{position:relative;margin:0;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);aspect-ratio:3/2;background:var(--bg-2);cursor:pointer;transition:transform .25s,box-shadow .25s}
+.photostrip figure:hover{transform:translateY(-4px);box-shadow:var(--shadow-lg)}
 .photostrip figure:focus-visible{outline:3px solid var(--blue2);outline-offset:2px}
-.photostrip img{width:100%;height:100%;object-fit:cover;display:block;transition:.4s}
+.photostrip img{width:100%;height:100%;object-fit:cover;display:block;transition:.5s}
 .photostrip figure:hover img{transform:scale(1.06)}
-.photostrip figcaption{position:absolute;left:0;right:0;bottom:0;padding:22px 12px 11px;color:#fff;font-size:15px;
- background:linear-gradient(transparent,rgba(15,23,42,.8))}
-.photostrip figcaption b{display:block;font-weight:800}
-.photostrip figcaption span{font-size:12px;font-weight:600;opacity:.9}
-.banner{position:relative;height:160px;border-radius:16px 16px 0 0;overflow:hidden;margin:-20px -20px 16px}
+.photostrip figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 13px;color:#fff;font-size:16px;
+ background:linear-gradient(transparent,rgba(15,17,22,.82))}
+.photostrip figcaption b{display:block;font-weight:700;font-family:var(--display);letter-spacing:-.01em}
+.photostrip figcaption span{font-size:12px;font-weight:500;opacity:.88;font-family:var(--mono);letter-spacing:.02em}
+.banner{position:relative;height:170px;border-radius:var(--r) var(--r) 0 0;overflow:hidden;margin:-20px -20px 18px}
 .banner img{width:100%;height:100%;object-fit:cover;display:block}
-.banner h2{position:absolute;left:18px;bottom:12px;margin:0;color:#fff;font-size:22px;text-shadow:0 2px 8px rgba(0,0,0,.5);z-index:2}
-.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(15,23,42,.7))}
+.banner h2{position:absolute;left:20px;bottom:14px;margin:0;color:#fff;font-size:24px;text-shadow:0 2px 14px rgba(0,0,0,.55);z-index:2}
+.banner::after{content:"";position:absolute;inset:0;background:linear-gradient(transparent 30%,rgba(15,17,22,.72))}
 @media(max-width:640px){.photostrip{grid-template-columns:1fr}.photostrip figure{aspect-ratio:16/9}}
-.intro{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:18px;margin:0 0 22px;font-size:14px;box-shadow:var(--shadow)}
-.intro b{color:var(--blue)}
-.legend{display:flex;gap:16px;flex-wrap:wrap;margin-top:10px;font-size:12px;color:var(--muted)}
-.dot{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:5px;vertical-align:middle}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px;position:sticky;top:8px;z-index:5}
-.tab{padding:10px 17px;border:1px solid var(--border);background:#ffffffdd;backdrop-filter:blur(8px);
- border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink);font-weight:600;transition:.18s;box-shadow:var(--shadow)}
-.tab:hover{transform:translateY(-1px);border-color:var(--blue2)}
-.tab.active{background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff;border-color:transparent;box-shadow:0 6px 16px rgba(37,99,235,.35)}
+
+/* ---- INTRO / LEGEND ---- */
+.intro{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--r);padding:20px 22px;margin:0 0 24px;font-size:14.5px;box-shadow:var(--shadow);color:var(--ink-soft)}
+.intro b{color:var(--ink);font-weight:600}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--muted)}
+.dot{display:inline-block;width:11px;height:11px;border-radius:4px;margin-right:6px;vertical-align:middle}
+
+/* ---- TABS ---- */
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 22px;position:sticky;top:8px;z-index:5;
+ background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(12px);padding:8px 0;border-radius:14px}
+.tab{padding:9px 16px;border:1px solid var(--border);background:var(--card);
+ border-radius:999px;cursor:pointer;font-size:14px;color:var(--ink-soft);font-weight:600;transition:.18s}
+.tab:hover{color:var(--ink);border-color:var(--ink);transform:translateY(-1px)}
+.tab.active{background:var(--ink);color:var(--bg);border-color:var(--ink);box-shadow:0 8px 20px -10px rgba(22,23,28,.55)}
 .panel{display:none;animation:fade .35s ease}
 .panel.active{display:block}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
-h2{font-size:20px;color:var(--blue);margin:2px 0 14px;font-weight:800;letter-spacing:-.3px}
-h3{font-size:15px;margin:16px 0 6px;font-weight:700}
-.months{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
-.mbtn{padding:9px 12px;border:1px solid var(--border);background:#fff;border-radius:12px;cursor:pointer;font-size:13px;text-align:center;min-width:84px;font-weight:700;transition:.16s}
-.mbtn:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-.mbtn small{display:block;color:var(--muted);font-size:10px;font-weight:600}
-.mbtn.active{background:linear-gradient(135deg,#2563eb,#0ea5e9);color:#fff;border-color:transparent;box-shadow:0 6px 14px rgba(37,99,235,.3)}
-.mbtn.active small{color:#e0f2fe}
-.phase{display:inline-block;font-size:11px;padding:4px 12px;border-radius:999px;background:linear-gradient(135deg,#dcfce7,#bbf7d0);color:#166534;font-weight:700;margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
-table{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;margin-top:6px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
-th,td{padding:10px 12px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border)}
+
+/* ---- CARDS / HEADINGS ---- */
+.card{background:var(--card);border:1px solid var(--border-soft);border-radius:var(--r);padding:24px;margin-bottom:18px;box-shadow:var(--shadow)}
+h2{font-size:23px;color:var(--ink);margin:2px 0 16px;font-weight:700;letter-spacing:-.025em}
+h3{font-size:14px;margin:18px 0 7px;font-weight:600;font-family:var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft)}
+
+/* ---- MONTH BUTTONS ---- */
+.months{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.mbtn{padding:10px 14px;border:1px solid var(--border);background:var(--white);border-radius:13px;cursor:pointer;font-size:14px;text-align:center;min-width:88px;font-weight:700;font-family:var(--display);letter-spacing:-.01em;transition:.16s}
+.mbtn:hover{transform:translateY(-2px);box-shadow:var(--shadow);border-color:var(--ink)}
+.mbtn small{display:block;color:var(--muted);font-size:10px;font-weight:600;font-family:var(--mono);letter-spacing:.04em;margin-top:2px}
+.mbtn.active{background:var(--ink);color:var(--bg);border-color:var(--ink);box-shadow:0 8px 18px -10px rgba(22,23,28,.5)}
+.mbtn.active small{color:color-mix(in srgb,var(--bg) 70%,transparent)}
+.phase{display:inline-block;font-size:11px;padding:5px 13px;border-radius:999px;background:var(--trx);color:var(--trx-s);font-weight:700;font-family:var(--mono);margin-bottom:12px;text-transform:uppercase;letter-spacing:.1em}
+
+/* ---- TABLES ---- */
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:13.5px;margin-top:8px;border:1px solid var(--border-soft);border-radius:13px;overflow:hidden;background:var(--white)}
+th,td{padding:11px 13px;text-align:left;vertical-align:top;border-bottom:1px solid var(--border-soft)}
 tr:last-child td{border-bottom:none}
-th{background:#f1f5f9;font-weight:700;color:#334155}
-tbody tr:hover td{background:#f8fafc}
-tr.run td:first-child{box-shadow:inset 4px 0 #3b82f6}
-tr.trx td:first-child{box-shadow:inset 4px 0 #22c55e}
-tr.row td:first-child{box-shadow:inset 4px 0 #f59e0b}
-tr.rest td:first-child{box-shadow:inset 4px 0 #cbd5e1}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+th{background:var(--bg-2);font-weight:600;color:var(--ink-soft);font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+tbody tr:hover td{background:color-mix(in srgb,var(--bg) 55%,var(--white))}
+tr.run td:first-child{box-shadow:inset 4px 0 var(--run-s)}
+tr.trx td:first-child{box-shadow:inset 4px 0 var(--trx-s)}
+tr.row td:first-child{box-shadow:inset 4px 0 var(--row-s)}
+tr.rest td:first-child{box-shadow:inset 4px 0 #c9c7bf}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 @media(max-width:640px){.grid2{grid-template-columns:1fr}#logForm{grid-template-columns:1fr!important}}
-ul{margin:6px 0;padding-left:20px}
-li{margin:4px 0;font-size:14px}
-.tip{background:linear-gradient(135deg,#eff6ff,#f0f9ff);border-left:4px solid var(--blue2);padding:12px 14px;border-radius:8px;font-size:13px;margin:10px 0}
-.muted{color:var(--muted);font-size:13px}
-.pillrow{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0}
-.pill{font-size:13px;padding:10px 14px;border-radius:12px;background:var(--rest);flex:1;min-width:200px;font-weight:500;border:1px solid var(--border)}
-button{transition:.16s}button:hover{transform:translateY(-1px);filter:brightness(1.05)}
+ul{margin:7px 0;padding-left:20px}
+li{margin:5px 0;font-size:14.5px;color:var(--ink-soft)}
+li b{color:var(--ink);font-weight:600}
+.tip{background:var(--run);border:1px solid color-mix(in srgb,var(--blue) 18%,transparent);border-left:3px solid var(--blue);padding:13px 15px;border-radius:10px;font-size:13.5px;margin:12px 0;color:var(--ink-soft)}
+.tip b{color:var(--ink)}
+.muted{color:var(--muted);font-size:13.5px}
+.pillrow{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.pill{font-size:13.5px;padding:12px 15px;border-radius:13px;background:var(--rest);flex:1;min-width:210px;font-weight:500;border:1px solid var(--border-soft);color:var(--ink-soft)}
+button{transition:.16s}button:hover{transform:translateY(-1px);filter:brightness(1.03)}
+
+/* ---- GALLERY ---- */
 .gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:16px;margin-top:16px}
-.gcard{position:relative;border-radius:16px;overflow:hidden;box-shadow:var(--shadow);background:#0f172a;cursor:pointer;transition:.2s}
+.gcard{position:relative;border-radius:var(--r);overflow:hidden;box-shadow:var(--shadow);background:var(--ink);cursor:pointer;transition:transform .25s,box-shadow .25s}
 .gcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-lg)}
 .gcard img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block;transition:.4s}
 .gcard:hover img{transform:scale(1.05)}
-.gcard .tag{position:absolute;top:10px;left:10px;background:#ffffffe6;color:#1e3a8a;font-weight:800;font-size:12px;padding:4px 10px;border-radius:999px;backdrop-filter:blur(4px)}
-.gcard .rm{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:#0f172abb;color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;opacity:0;transition:.2s}
+.gcard .tag{position:absolute;top:10px;left:10px;background:color-mix(in srgb,var(--white) 92%,transparent);color:var(--ink);font-weight:700;font-family:var(--mono);font-size:11px;letter-spacing:.04em;padding:5px 11px;border-radius:999px;backdrop-filter:blur(4px)}
+.gcard .rm{position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:50%;background:rgba(22,23,28,.72);color:#fff;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;opacity:0;transition:.2s}
 .gcard:hover .rm{opacity:1}
-.gempty{text-align:center;padding:36px 16px;color:var(--muted);border:2px dashed var(--border);border-radius:16px;margin-top:14px}
-.gempty .big{font-size:34px;margin-bottom:6px}
-.filebtn{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;border-radius:10px;cursor:pointer;
- font-weight:700;font-size:14px;color:#fff;background:linear-gradient(135deg,#2563eb,#0ea5e9);
- border:none;box-shadow:0 4px 12px rgba(37,99,235,.3);transition:.16s}
-.filebtn:hover{transform:translateY(-1px);filter:brightness(1.06)}
+.gempty{text-align:center;padding:40px 16px;color:var(--muted);border:1.5px dashed var(--border);border-radius:var(--r);margin-top:14px}
+.gempty .big{font-size:34px;margin-bottom:8px}
+
+/* ---- INPUTS / BUTTONS ---- */
+.filebtn{display:inline-flex;align-items:center;gap:8px;padding:10px 18px;border-radius:11px;cursor:pointer;
+ font-weight:600;font-size:14px;color:var(--bg);background:var(--ink);
+ border:none;box-shadow:0 8px 18px -10px rgba(22,23,28,.5);transition:.16s}
+.filebtn:hover{transform:translateY(-1px)}
 .filebtn input{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden}
 .filename{margin-left:10px;font-size:13px;color:var(--muted)}
-input[type=month]{padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px}
-.donebtn{margin-top:14px;padding:13px 22px;border:none;border-radius:12px;font-size:16px;font-weight:800;cursor:pointer;
- color:#fff;background:linear-gradient(135deg,#22c55e,#16a34a);box-shadow:0 6px 16px rgba(34,197,94,.4)}
-.donebtn:disabled{background:#cbd5e1;box-shadow:none;cursor:default}
-.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:12px;margin-top:6px}
-.badge{text-align:center;padding:14px 8px;border-radius:14px;border:1px solid var(--border);background:var(--rest);transition:.2s}
-.badge.earned{background:linear-gradient(135deg,#fff7ed,#fef3c7);border-color:#fcd34d}
-.badge .ico{font-size:30px;filter:grayscale(1);opacity:.4}
-.badge.earned .ico{filter:none;opacity:1}
-.badge .name{font-size:12px;font-weight:700;margin-top:5px}
-.badge .req{font-size:10px;color:var(--muted)}
+input[type=month],input[type=date],input[type=number],input[type=text],select{padding:10px 13px;border:1px solid var(--border);border-radius:11px;font-size:14px;background:var(--white);color:var(--ink)}
+.donebtn{margin-top:16px;padding:14px 24px;border:none;border-radius:13px;font-size:16px;font-weight:700;cursor:pointer;
+ color:#fff;background:var(--trx-s);box-shadow:0 10px 22px -12px rgba(42,146,104,.7)}
+.donebtn:disabled{background:#c9c7bf;color:#fff;box-shadow:none;cursor:default}
+.badges-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(124px,1fr));gap:12px;margin-top:8px}
+.badge{text-align:center;padding:16px 8px;border-radius:15px;border:1px solid var(--border-soft);background:var(--rest);transition:.2s}
+.badge.earned{background:var(--row);border-color:color-mix(in srgb,var(--row-s) 45%,transparent)}
+.badge .ico{font-size:0;line-height:0}
+.badge .ico svg{width:30px;height:30px;color:var(--muted);opacity:.42}
+.badge.earned .ico svg{color:var(--ink);opacity:1}
+.badge .name{font-size:12.5px;font-weight:700;margin-top:6px}
+.badge .req{font-size:10px;color:var(--muted);font-family:var(--mono);letter-spacing:.02em;margin-top:2px}
 .confetti{position:fixed;top:-10px;width:10px;height:14px;z-index:60;pointer-events:none;border-radius:2px}
-#lightbox{position:fixed;inset:0;background:rgba(15,23,42,.92);display:none;align-items:center;justify-content:center;z-index:50;padding:24px;cursor:zoom-out}
+#lightbox{position:fixed;inset:0;background:rgba(15,17,22,.93);display:none;align-items:center;justify-content:center;z-index:50;padding:24px;cursor:zoom-out}
 #lightbox.on{display:flex}
 #lightbox img{max-width:92%;max-height:88%;border-radius:14px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
-#lightbox .cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#fff;font-weight:700}
+#lightbox .cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#fff;font-weight:600;font-family:var(--mono);letter-spacing:.04em}
 #lightbox .x{position:absolute;top:18px;right:22px;color:#fff;font-size:30px;cursor:pointer;line-height:1}
 input,select{font-family:inherit}input:focus,select:focus{outline:2px solid var(--blue2);outline-offset:-1px}
+label.muted{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.06em}
+/* ---- ICON GLYPHS ---- */
+.glyph{width:1em;height:1em;vertical-align:-.14em;flex:none;display:inline-block}
+.glyph--run{color:var(--run-s)}.glyph--trx{color:var(--trx-s)}.glyph--row{color:var(--row-s)}.glyph--rest{color:var(--muted)}
+.gempty .big svg{width:38px;height:38px;color:var(--muted)}
+.photostrip figcaption b{display:flex;align-items:center;gap:8px}
+.photostrip figcaption b .glyph{width:19px;height:19px;vertical-align:0}
+.filebtn .glyph{width:17px;height:17px}
+.donebtn .glyph,.filebtn .glyph{vertical-align:-.18em}
 </style>
 </head>
 <body>
 <div class="wrap">
 <header>
-<h1>Egyéves edzésterv</h1>
-<p>Személyre szabott terv kezdő szintről · indulás 2026 szeptember</p>
-<img class="hero" loading="lazy" alt="" aria-hidden="true" src="https://images.pexels.com/photos/16980804/pexels-photo-16980804.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&fit=crop">
+<img class="hero" loading="lazy" alt="" aria-hidden="true" src="https://images.pexels.com/photos/16980804/pexels-photo-16980804.jpeg?auto=compress&cs=tinysrgb&w=1100&h=620&fit=crop">
+<div class="hinner">
+<div class="eyebrow">Indulás · 2026. szeptember</div>
+<h1>Éves edzésterv</h1>
+<p>Kezdő szintről igazi formába — TRX, futás és evezőgép, kéthetes ritmusban.</p>
+<div class="hstats">
+<div class="hstat"><div class="hn">52</div><div class="hl">hét végigvezetve</div></div>
+<div class="hstat"><div class="hn">12</div><div class="hl">havi blokk</div></div>
+<div class="hstat"><div class="hn">3</div><div class="hl">mozgásforma</div></div>
+</div>
+</div>
 </header>
 
 <div class="photostrip">
- <figure data-go="hetek" role="button" tabindex="0"><img loading="lazy" alt="Futás" src="https://images.pexels.com/photos/878151/pexels-photo-878151.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b>🏃 Futás</b><span>Heti beosztás megnyitása →</span></figcaption></figure>
- <figure data-go="gyak" role="button" tabindex="0"><img loading="lazy" alt="Terem / TRX" src="https://images.pexels.com/photos/36399986/pexels-photo-36399986.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b>💪 TRX / terem</b><span>Gyakorlatok megnyitása →</span></figcaption></figure>
- <figure data-go="evezo" role="button" tabindex="0"><img loading="lazy" alt="Evezőgép" src="https://images.pexels.com/photos/7690207/pexels-photo-7690207.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b>🚣 Evezőgép</b><span>Evezőterv megnyitása →</span></figcaption></figure>
+ <figure data-go="hetek" role="button" tabindex="0"><img loading="lazy" alt="Futás" src="https://images.pexels.com/photos/878151/pexels-photo-878151.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b><svg class="glyph glyph--run" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/></svg>Futás</b><span>Heti beosztás megnyitása →</span></figcaption></figure>
+ <figure data-go="gyak" role="button" tabindex="0"><img loading="lazy" alt="Terem / TRX" src="https://images.pexels.com/photos/36399986/pexels-photo-36399986.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b><svg class="glyph glyph--trx" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="3" height="6" rx="1"/><rect x="19" y="9" width="3" height="6" rx="1"/><rect x="5" y="10.5" width="2" height="3" rx=".5"/><rect x="17" y="10.5" width="2" height="3" rx=".5"/><path d="M7 12h10"/></svg>TRX / terem</b><span>Gyakorlatok megnyitása →</span></figcaption></figure>
+ <figure data-go="evezo" role="button" tabindex="0"><img loading="lazy" alt="Evezőgép" src="https://images.pexels.com/photos/7690207/pexels-photo-7690207.jpeg?auto=compress&cs=tinysrgb&w=600&h=420&fit=crop"><figcaption><b><svg class="glyph glyph--row" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5.5 18.5 16 8"/><path d="M14.5 5.5a2.8 2.8 0 0 1 4 4L16.5 11l-3.5-3.5 1.5-2Z"/><path d="M4.2 19.8 6 18"/></svg>Evezőgép</b><span>Evezőterv megnyitása →</span></figcaption></figure>
 </div>
 <div class="intro">
 A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
@@ -149,7 +208,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 </div>
 
 <div class="tabs" id="tabs">
-<div class="tab active" data-p="ma">📍 Ma</div>
+<div class="tab active" data-p="ma">Ma</div>
 <div class="tab" data-p="havi">Havi terv</div>
 <div class="tab" data-p="hetek">Heti sablonok</div>
 <div class="tab" data-p="evezo">Evezőterv</div>
@@ -158,25 +217,25 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <div class="tab" data-p="etkezes">Étkezés</div>
 <div class="tab" data-p="vitamin">Vitaminok</div>
 <div class="tab" data-p="naplo">Napló</div>
-<div class="tab" data-p="fotok">📸 Fotók</div>
+<div class="tab" data-p="fotok">Fotók</div>
 </div>
 
 <!-- MA -->
 <div class="panel active" id="ma">
-<div class="card" style="background:linear-gradient(135deg,#1e3a8a,#2563eb);color:#fff">
+<div class="card" style="background:var(--ink);color:var(--bg);border-color:transparent">
 <div id="todayBox">A terv 2026. szeptember 1-jén indul.</div>
 </div>
 <div class="card">
 <h2>Ez a heti checklist</h2>
 <p class="muted" id="weekLabel"></p>
 <div style="background:var(--rest);border-radius:999px;height:12px;overflow:hidden;margin:10px 0">
- <div id="weekBar" style="height:100%;width:0;background:linear-gradient(90deg,#22c55e,#16a34a);transition:.4s"></div>
+ <div id="weekBar" style="height:100%;width:0;background:#2a9268;transition:.4s"></div>
 </div>
 <div id="weekList"></div>
 <p class="muted" style="margin-top:8px">A pipák ebben a böngészőben tárolódnak, hetente automatikusan nullázódnak.</p>
 </div>
 <div class="card">
-<h2>🏅 Jelvények</h2>
+<h2>Jelvények</h2>
 <p class="muted">Gyűjtsd be a mérföldköveket – minden elvégzett edzés számít!</p>
 <div id="badges" class="badges-grid"></div>
 </div>
@@ -252,7 +311,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <!-- GYAKORLATOK -->
 <div class="panel" id="gyak">
 <div class="card">
-<div class="banner"><img loading="lazy" alt="TRX / terem" src="https://images.pexels.com/photos/36399986/pexels-photo-36399986.jpeg?auto=compress&cs=tinysrgb&w=1000&h=400&fit=crop"><h2>💪 TRX gyakorlatok</h2></div>
+<div class="banner"><img loading="lazy" alt="TRX / terem" src="https://images.pexels.com/photos/36399986/pexels-photo-36399986.jpeg?auto=compress&cs=tinysrgb&w=1000&h=400&fit=crop"><h2>TRX gyakorlatok</h2></div>
 <table>
 <tr><th>Gyakorlat</th><th>Mit dolgoztat</th><th>Technika</th><th>Gyakori hiba</th></tr>
 <tr><td><b>TRX guggolás</b></td><td>Comb, far</td><td>Hevedert feszesen tartsd, ülj hátra mintha székre, térd a lábujj fölött, sarkon nyomj fel.</td><td>Térd befelé esik, sarok elemelkedik.</td></tr>
@@ -264,7 +323,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 </table>
 </div>
 <div class="card">
-<h2>🚣 Evezőgép – a 4 fázis</h2>
+<h2>Evezőgép – a 4 fázis</h2>
 <table>
 <tr><th>Fázis</th><th>Mozdulat</th><th>Figyelj</th></tr>
 <tr><td><b>1. Catch (start)</b></td><td>Térd hajlítva, sípcsont függőleges, kar nyújtva, törzs enyhén előre.</td><td>Egyenes hát, vállat ne húzd fel.</td></tr>
@@ -279,7 +338,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <!-- BEMELEGITES -->
 <div class="panel" id="bemeleg">
 <div class="card">
-<h2>🔥 Bemelegítés (5-8 perc)</h2>
+<h2>Bemelegítés (5-8 perc)</h2>
 <p class="muted">Minden edzés előtt – felkészíti az izmokat és ízületeket, csökkenti a sérülésveszélyt.</p>
 <ol>
 <li><b>Pulzusemelés (2-3'):</b> helyben kocogás, magas térd, sarokemelés, vagy könnyű evezés alacsony ellenállással.</li>
@@ -290,7 +349,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <div class="tip">Evezés előtt különösen fontos a hát és csípő bemelegítése – kezdd 2-3 perc nagyon könnyű evezéssel.</div>
 </div>
 <div class="card">
-<h2>🧘 Levezetés és nyújtás (5-7 perc)</h2>
+<h2>Levezetés és nyújtás (5-7 perc)</h2>
 <p class="muted">Edzés után – segíti a regenerációt és a mozgékonyságot. Minden nyújtást 20-30 mp-ig tarts, ne pattogtass.</p>
 <div class="grid2">
 <div><h3>Alsótest</h3><ul>
@@ -373,7 +432,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
  <div><label class="muted">Dátum</label><input type="date" id="lDate" style="width:100%;padding:7px;border:1px solid var(--border);border-radius:6px"></div>
  <div><label class="muted">Típus</label>
   <select id="lType" style="width:100%;padding:7px;border:1px solid var(--border);border-radius:6px">
-   <option>🏃 Futás</option><option>💪 TRX</option><option>🚣 Evezés</option><option>🧘 Egyéb</option>
+   <option>Futás</option><option>TRX</option><option>Evezés</option><option>Egyéb</option>
   </select></div>
  <div><label class="muted">Megjegyzés (idő, távolság, érzés…)</label><input type="text" id="lNote" placeholder="pl. 28', jól ment" style="width:100%;padding:7px;border:1px solid var(--border);border-radius:6px"></div>
 </div>
@@ -383,7 +442,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <button id="lExport" style="margin-top:10px;padding:7px 14px;background:#fff;border:1px solid var(--border);border-radius:8px;cursor:pointer;font-size:13px">Export (CSV)</button>
 </div>
 <div class="card">
-<h2>📊 Haladás</h2>
+<h2>Haladás</h2>
 <div class="grid2">
 <div><h3>Edzések havonta</h3><canvas id="chMonth" height="200"></canvas></div>
 <div><h3>Típusok megoszlása</h3><canvas id="chType" height="200"></canvas></div>
@@ -391,7 +450,7 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <p class="muted" id="chEmpty" style="margin-top:8px"></p>
 </div>
 <div class="card">
-<h2>⚖️ Testsúly</h2>
+<h2>Testsúly</h2>
 <p class="muted">Rögzítsd hetente a testsúlyodat, és kövesd a trendet.</p>
 <div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-top:8px">
  <div><label class="muted">Dátum</label><br><input type="date" id="wDate" style="padding:9px 12px;border:1px solid var(--border);border-radius:10px;font-size:14px"></div>
@@ -407,19 +466,19 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <!-- FOTOK -->
 <div class="panel" id="fotok">
 <div class="card">
-<h2>📸 Haladásfotók</h2>
+<h2>Haladásfotók</h2>
 <p class="muted">Tölts fel havonta egy fotót, hogy lásd a változást. A képek csak ebben a böngészőben tárolódnak (privát), kicsinyítve.</p>
 <div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-top:8px">
  <div><label class="muted">Hónap</label><br><input type="month" id="phMonth" style="padding:8px;border:1px solid var(--border);border-radius:8px"></div>
  <div><label class="muted">Fotó</label><br>
-  <label class="filebtn">📷 Fájl kiválasztása<input type="file" id="phFile" accept="image/*"></label>
+  <label class="filebtn"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4.5h-5L7 7.5H4a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.2"/></svg>Fájl kiválasztása<input type="file" id="phFile" accept="image/*"></label>
   <span class="filename" id="phName">Nincs kiválasztva</span></div>
 </div>
 <p class="muted" id="phMsg" style="margin-top:8px"></p>
 <div id="phGallery" class="gallery"></div>
 </div>
 <div class="card" id="compareCard" style="display:none">
-<h2>↔️ Előtte – utána</h2>
+<h2>Előtte – utána</h2>
 <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:end;margin-bottom:12px">
  <div><label class="muted">Előtte</label><br><select id="cmpA" style="padding:8px;border:1px solid var(--border);border-radius:8px"></select></div>
  <div><label class="muted">Utána</label><br><select id="cmpB" style="padding:8px;border:1px solid var(--border);border-radius:8px"></select></div>
@@ -435,6 +494,24 @@ A terv <b>kéthetes ritmusra</b> épül, ami egész évben ismétlődik:
 <div id="lightbox"><span class="x">✕</span><img alt=""><div class="cap"></div></div>
 
 <script>
+const ICONS={
+run:'<path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 4.5-6C9.37 2 10 3.8 10 5.5c0 3.11-2 5.66-2 8.68V16a2 2 0 1 1-4 0Z"/><path d="M20 20v-2.38c0-2.12 1.03-3.12 1-5.62-.03-2.72-1.49-6-4.5-6C14.63 6 14 7.8 14 9.5c0 3.11 2 5.66 2 8.68V20a2 2 0 1 0 4 0Z"/><path d="M16 17h4"/><path d="M4 13h4"/>',
+trx:'<rect x="2" y="9" width="3" height="6" rx="1"/><rect x="19" y="9" width="3" height="6" rx="1"/><rect x="5" y="10.5" width="2" height="3" rx=".5"/><rect x="17" y="10.5" width="2" height="3" rx=".5"/><path d="M7 12h10"/>',
+row:'<path d="M5.5 18.5 16 8"/><path d="M14.5 5.5a2.8 2.8 0 0 1 4 4L16.5 11l-3.5-3.5 1.5-2Z"/><path d="M4.2 19.8 6 18"/>',
+rest:'<path d="M20 14.3A8 8 0 1 1 9.7 4 6.4 6.4 0 0 0 20 14.3Z"/>',
+sprout:'<path d="M12 20v-8"/><path d="M12 12C9.5 12 6 10.5 6 6c4 0 6 2.5 6 6Z"/><path d="M12 12c0-3.5 2.5-6 6-6 0 4-3.5 6-6 6Z"/><path d="M8 20h8"/>',
+flame:'<path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5S12.5 5 12 2.5C11.5 5 10 7.4 8 9.5S5 13 5 15a7 7 0 0 0 7 7Z"/>',
+zap:'<path d="M13 2 4 14h6l-1 8 9-12h-6l1-8Z"/>',
+trophy:'<path d="M7 4h10v5a5 5 0 0 1-10 0V4Z"/><path d="M7 6H4v1a3 3 0 0 0 3 3"/><path d="M17 6h3v1a3 3 0 0 1-3 3"/><path d="M9 21h6"/><path d="M12 14v7"/>',
+crown:'<path d="M3 7l4.5 4L12 4l4.5 7L21 7l-1.5 12h-15L3 7Z"/>',
+calendar:'<rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18"/><path d="M8 2.5v4"/><path d="M16 2.5v4"/>',
+camera:'<path d="M14.5 4.5h-5L7 7.5H4a2 2 0 0 0-2 2v8.5a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9.5a2 2 0 0 0-2-2h-3l-2.5-3Z"/><circle cx="12" cy="13" r="3.2"/>',
+check:'<path d="M5 12.5l4.5 4.5L19 6.5"/>'
+};
+function svgIcon(n,extra){return '<svg class="glyph '+(extra||'')+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+(ICONS[n]||'')+'</svg>';}
+const DISC={'Futás':['run','glyph--run'],'TRX':['trx','glyph--trx'],'Evezés':['row','glyph--row'],'Pihenő':['rest','glyph--rest']};
+function disc(t){const d=DISC[t]||['run',''];return svgIcon(d[0],d[1]);}
+
 const months = [
  {m:"Szept.",y:"1. hó",phase:"Alapozás",focus:"Beszokás, technika, mozgásminták rögzítése. Cél a rendszeresség, nem a teljesítmény.",run:"Futás: 2×/„A” hét, kocogás-séta intervall, 25-30'.",trx:"TRX: 2 kör, alapgyakorlatok, technikára figyelve.",row:"Evezés: csak technika, könnyű ellenállás, 3×4' / pihenő."},
  {m:"Okt.",y:"2. hó",phase:"Alapozás",focus:"Az alapok stabilizálása, kicsit hosszabb terhelések. Test hozzászokik a rendszerhez.",run:"Futás: futószakaszok hossza nő (1,5-2' kocogás / 1' séta).",trx:"TRX: 2-3 kör, ismétlésszám emelése.",row:"Evezés: 3-4×4' folyamatos, tisztán."},
@@ -464,9 +541,9 @@ function render(i){
  body.innerHTML=`<span class="phase">${mo.phase}</span>
  <p>${mo.focus}</p>
  <div class="pillrow">
- <span class="pill" style="background:var(--run)">🏃 ${mo.run}</span>
- <span class="pill" style="background:var(--trx)">💪 ${mo.trx}</span>
- <span class="pill" style="background:var(--row)">🚣 ${mo.row}</span>
+ <span class="pill" style="background:var(--run)">${svgIcon('run','glyph--run')} ${mo.run}</span>
+ <span class="pill" style="background:var(--trx)">${svgIcon('trx','glyph--trx')} ${mo.trx}</span>
+ <span class="pill" style="background:var(--row)">${svgIcon('row','glyph--row')} ${mo.row}</span>
  </div>
  <p class="muted" style="margin-top:10px">A heti felosztást lásd a „Heti sablonok” fülön: az „A” (terem) és „B” (otthon) hét felváltva ismétlődik.</p>`;
 }
@@ -537,11 +614,11 @@ function renderCharts(){
  const byType={};a.forEach(e=>{byType[e.type]=(byType[e.type]||0)+1});
  if(chM)chM.destroy();if(chT)chT.destroy();
  chM=new Chart(document.getElementById('chMonth'),{type:'bar',
-  data:{labels:mk,datasets:[{data:mk.map(k=>byMonth[k]),backgroundColor:'#2563eb',borderRadius:6}]},
+  data:{labels:mk,datasets:[{data:mk.map(k=>byMonth[k]),backgroundColor:'#2f64df',borderRadius:6}]},
   options:{plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,ticks:{precision:0}}}}});
  const tl=Object.keys(byType);
  chT=new Chart(document.getElementById('chType'),{type:'doughnut',
-  data:{labels:tl,datasets:[{data:tl.map(t=>byType[t]),backgroundColor:['#3b82f6','#22c55e','#f59e0b','#a855f7','#94a3b8']}]},
+  data:{labels:tl,datasets:[{data:tl.map(t=>byType[t]),backgroundColor:['#2f64df','#2a9268','#b78327','#7c6cd9','#a8a6a0']}]},
   options:{plugins:{legend:{position:'bottom'}}}});
 }
 const _orig=renderLog;renderLog=function(){_orig();renderCharts();};
@@ -568,14 +645,14 @@ function renderBadges(){
  const g=document.getElementById('badges');if(!g)return;
  const a=load();const n=a.length;const st=streak(a);
  const defs=[
-  {ico:'🌱',name:'Első edzés',req:'1 edzés',ok:n>=1},
-  {ico:'🔥',name:'Lendületben',req:'10 edzés',ok:n>=10},
-  {ico:'💪',name:'Kitartó',req:'25 edzés',ok:n>=25},
-  {ico:'🏆',name:'Félúton',req:'50 edzés',ok:n>=50},
-  {ico:'👑',name:'Centurió',req:'100 edzés',ok:n>=100},
-  {ico:'📅',name:'Sorozat',req:'4 hét zsinórban',ok:st>=4},
+  {ico:'sprout',name:'Első edzés',req:'1 edzés',ok:n>=1},
+  {ico:'flame',name:'Lendületben',req:'10 edzés',ok:n>=10},
+  {ico:'zap',name:'Kitartó',req:'25 edzés',ok:n>=25},
+  {ico:'trophy',name:'Félúton',req:'50 edzés',ok:n>=50},
+  {ico:'crown',name:'Centurió',req:'100 edzés',ok:n>=100},
+  {ico:'calendar',name:'Sorozat',req:'4 hét zsinórban',ok:st>=4},
  ];
- g.innerHTML=defs.map(d=>`<div class="badge ${d.ok?'earned':''}"><div class="ico">${d.ico}</div><div class="name">${d.name}</div><div class="req">${d.req}</div></div>`).join('');
+ g.innerHTML=defs.map(d=>`<div class="badge ${d.ok?'earned':''}"><div class="ico">${svgIcon(d.ico)}</div><div class="name">${d.name}</div><div class="req">${d.req}</div></div>`).join('');
 }
 // ---- Testsúly ----
 const WKEY='edzes_suly_v1';let chW=null;
@@ -591,7 +668,7 @@ function renderWeight(){
  stats.style.display='';stats.innerHTML=`<b>Jelenleg:</b> ${last} kg · <b>Kezdő:</b> ${first} kg · <b>Változás:</b> ${diff>0?'+':''}${diff} kg`;
  if(chW)chW.destroy();
  chW=new Chart(document.getElementById('chWeight'),{type:'line',
-  data:{labels:a.map(e=>e.date),datasets:[{data:a.map(e=>e.kg),borderColor:'#2563eb',backgroundColor:'rgba(37,99,235,.13)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#2563eb'}]},
+  data:{labels:a.map(e=>e.date),datasets:[{data:a.map(e=>e.kg),borderColor:'#2f64df',backgroundColor:'rgba(47,100,223,.12)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#2f64df'}]},
   options:{plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>v+' kg'}}}}});
 }
 document.getElementById('wAdd').onclick=()=>{
@@ -610,16 +687,15 @@ function setupToday(){
  const isA=wk%2===0;const sched=isA?weekA:weekB;
  const di=(now.getDay()+6)%7;const t=sched[di];
  const wkType=isA?'„A” hét – terem (TRX + futás)':'„B” hét – otthon (evezőgép)';
- const emoji={'Futás':'🏃','TRX':'💪','Evezés':'🚣','Pihenő':'😴'}[t[0]]||'';
  const todayStr=now.toISOString().slice(0,10);
- box.innerHTML=`<div style="font-size:13px;opacity:.85">${wkType} · ${dayNames[di]}</div>
-  <div style="font-size:28px;font-weight:800;margin:6px 0">${emoji} ${t[0]}</div>
+ box.innerHTML=`<div style="font-size:13px;opacity:.85;font-family:var(--mono);letter-spacing:.04em">${wkType} · ${dayNames[di]}</div>
+  <div style="font-size:28px;font-weight:700;font-family:var(--display);letter-spacing:-.02em;margin:8px 0;display:flex;align-items:center;gap:12px">${disc(t[0])} ${t[0]}</div>
   <div style="opacity:.92">${t[1]||'Pihenj és regenerálódj a következő edzésre.'}</div>`;
  if(t[0]!=='Pihenő'){
-  const typeLbl={'Futás':'🏃 Futás','TRX':'💪 TRX','Evezés':'🚣 Evezés'}[t[0]];
+  const typeLbl={'Futás':'Futás','TRX':'TRX','Evezés':'Evezés'}[t[0]];
   const already=load().some(e=>e.date===todayStr && e.type===typeLbl);
   const btn=document.createElement('button');btn.className='donebtn';
-  btn.textContent=already?'✅ Mai edzés kész!':'✅ Ma elvégeztem';btn.disabled=already;
+  btn.innerHTML=already?svgIcon('check')+' Mai edzés kész!':svgIcon('check')+' Ma elvégeztem';btn.disabled=already;
   btn.onclick=()=>{
    const a=load();a.push({id:Date.now(),date:todayStr,type:typeLbl,note:'Ma elvégeztem'});save(a);
    const wkKey='wk_'+monday(now).toISOString().slice(0,10);let dn=[];try{dn=JSON.parse(localStorage.getItem(wkKey))||[]}catch(e){}
@@ -639,7 +715,7 @@ function setupToday(){
   const row=document.createElement('label');
   row.style.cssText='display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;margin:6px 0;cursor:pointer;'+(ch?'background:#f0fdf4':'');
   row.innerHTML=`<input type="checkbox" ${ch?'checked':''} style="width:18px;height:18px">
-   <span><b>${dayNames[i]}</b> · ${({'Futás':'🏃','TRX':'💪','Evezés':'🚣'}[s[0]])} ${s[0]} <span class="muted">– ${s[1]}</span></span>`;
+   <span><b>${dayNames[i]}</b> · ${disc(s[0])} ${s[0]} <span class="muted">– ${s[1]}</span></span>`;
   row.querySelector('input').onchange=e=>{
    if(e.target.checked)done.push(i);else done=done.filter(x=>x!==i);
    localStorage.setItem(wkKey,JSON.stringify(done));setupToday();
@@ -672,7 +748,7 @@ function resize(file,cb){
 function renderGallery(){
  const o=loadPhotos();const g=document.getElementById('phGallery');g.innerHTML='';
  const keys=Object.keys(o).sort();
- if(!keys.length){g.innerHTML='<div class="gempty"><div class="big">📷</div>Még nincs feltöltött fotó.<br>Válassz egy hónapot fent, és tölts fel egy képet!</div>';updateCompare();return;}
+ if(!keys.length){g.innerHTML='<div class="gempty"><div class="big">'+svgIcon('camera')+'</div>Még nincs feltöltött fotó.<br>Válassz egy hónapot fent, és tölts fel egy képet!</div>';updateCompare();return;}
  keys.forEach(k=>{
   const d=document.createElement('div');d.className='gcard';
   d.innerHTML=`<img loading="lazy" src="${o[k]}"><span class="tag">${k}</span><button class="rm" data-k="${k}" title="Törlés">✕</button>`;
